@@ -45,7 +45,7 @@ export default {
   },
   template: `
     <div>
-    Hello world
+    waiting...
     </div>
   `
 }

@@ -11,3 +11,25 @@ layout: default
     </div>
   </div>
 </div>
+
+<div id="app-container" class="row">
+  <app />
+</div>
+
+{% if jekyll.environment == "production" %}
+<script src="https://unpkg.com/vue@3.2.31/dist/vue.global.prod.js"></script>
+{% else %}
+<script src="https://unpkg.com/vue@3.2.31/dist/vue.global.js"></script>
+{% endif %}
+
+<script type="module">
+  import WaitApp from '{{ site.baseurl }}/assets/js/components/WaitApp.js';
+  import LoopApp from '{{ site.baseurl }}/assets/js/components/LoopApp.js';
+  import getInit from '{{ site.baseurl }}/assets/js/getInit.js';
+
+  Vue.createApp(
+    {
+      components: { App: location.search ? LoopApp : WaitApp }
+    }
+  ).mount('#app-container');
+</script>
