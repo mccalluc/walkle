@@ -45,7 +45,28 @@ export default {
   },
   template: `
     <div>
-    waiting...
+      <details>
+        <summary>Settings</summary>
+        frequency:
+          <select>
+            <option>Hourly</option>
+            <option>Daily</option>
+            <option>Weekly</option>
+          </select>
+        neighborhood:
+          <select>
+            <option>30 seconds</option>
+          </select>
+        units:
+          <select>
+            <option>Miles</option>
+            <option>Kilometers</option>
+          </select>
+        target:
+          <select>
+            <option>1/2 Mile</option>
+          </select>
+      </details>
     </div>
   `
 }
