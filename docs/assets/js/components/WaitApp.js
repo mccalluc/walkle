@@ -7,27 +7,13 @@ export default {
       frequency_s: 60 * 60,
       neighborhood_deg: 1/60,
       unit: 'mile',
-      target_either: 1,
+      radius_either: 1,
     }
   },
   computed: {
-    // charChoices() {
-    //   return Object.keys(this.segmentMap);
-    // },
-    // font() {
-    //   const font = makeFont({
-    //     fontName: 'spiro-font',
-    //     segmentMap: this.segmentMap,
-    //     segments: this.segments,
-    //     stretch: this.stretch,
-    //     pad: this.pad,
-    //     skew: this.skew,
-    //     shrink: this.shrink,
-    //     grow: this.grow,
-    //     bevel: this.bevel
-    //   });
-    //   return font;
-    // },
+    now_s() {return Math.floor(Date.now() / 1000)},
+    next_s() {return Math.ceil((this.now_s || 0) / this.frequency_s) * this.frequency_s},
+    remaining_s() {return this.next_s - this.now_s},
   },
   // methods: {
   //   downloadFont() {
@@ -47,6 +33,9 @@ export default {
         {{unit}}
         {{target_either}}
       </div>
+      <div>
+        Next walkle in: {{remaining_s}}
+      </div>
       <details open="1">
         <summary>Settings</summary>
         frequency:
@@ -61,13 +50,13 @@ export default {
             <option :value="2 / 60">2'</option>
             <option :value="3 / 60">3'</option>
           </select>
-        units:
+        unit:
           <select v-model="unit">
-            <option value="mile">Miles</option>
-            <option value="km">Kilometers</option>
+            <option value="mile">mile</option>
+            <option value="km">km</option>
           </select>
-        target:
-          <select v-model="target_either">
+        radius:
+          <select v-model="radius_either">
             <option :value="1">1 {{unit}}</option>
             <option :value="1/2">1/2 {{unit}}</option>
             <option :value="1/4">1/4 {{unit}}</option>
