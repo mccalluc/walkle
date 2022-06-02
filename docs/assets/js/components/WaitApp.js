@@ -2,18 +2,14 @@ export default {
   // props: {
   //   init: Object,
   // },
-  // data() {
-  //   return {
-  //     segmentMap: fillLowerCase(this.init.segmentMap),
-  //     segments: this.init.segments,
-  //     stretch: this.init.stretch,
-  //     pad: this.init.pad,
-  //     skew: this.init.skew,
-  //     shrink: this.init.shrink,
-  //     grow: this.init.grow,
-  //     bevel: this.init.bevel,
-  //   }
-  // },
+  data() {
+    return {
+      frequency_s: 60 * 60,
+      neighborhood_deg: 1/60,
+      unit: 'mile',
+      target_either: 1,
+    }
+  },
   computed: {
     // charChoices() {
     //   return Object.keys(this.segmentMap);
@@ -45,26 +41,38 @@ export default {
   },
   template: `
     <div>
-      <details>
+      <div>
+        {{frequency_s}}
+        {{neighborhood_deg}}
+        {{unit}}
+        {{target_either}}
+      </div>
+      <details open="1">
         <summary>Settings</summary>
         frequency:
-          <select>
-            <option>Hourly</option>
-            <option>Daily</option>
-            <option>Weekly</option>
+          <select v-model="frequency_s">
+            <option :value="60 * 60">Hourly</option>
+            <option :value="60 * 60 * 24">Daily</option>
+            <option :value="60 * 60 * 24 * 7">Weekly</option>
           </select>
         neighborhood:
-          <select>
-            <option>30 seconds</option>
+          <select v-model="neighborhood_deg">
+            <option :value="1 / 60">1'</option>
+            <option :value="2 / 60">2'</option>
+            <option :value="3 / 60">3'</option>
           </select>
         units:
-          <select>
-            <option>Miles</option>
-            <option>Kilometers</option>
+          <select v-model="unit">
+            <option value="mile">Miles</option>
+            <option value="km">Kilometers</option>
           </select>
         target:
-          <select>
-            <option>1/2 Mile</option>
+          <select v-model="target_either">
+            <option :value="1">1 {{unit}}</option>
+            <option :value="1/2">1/2 {{unit}}</option>
+            <option :value="1/4">1/4 {{unit}}</option>
+            <option :value="1/10">1/10 {{unit}}</option>
+            <option :value="1/20">1/20 {{unit}}</option>
           </select>
       </details>
     </div>
