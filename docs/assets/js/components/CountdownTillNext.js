@@ -25,7 +25,9 @@ export default {
   },
   template: `
     <div>
-      Next walkle in: {{remainingFormatted}}
+      Next walkle in: 
+      <span v-if="remainingSeconds >= 0">{{remainingFormatted}}</span>
+      <a href="/walkle/" v-else>now!</a>
     </div>
   `
 }
