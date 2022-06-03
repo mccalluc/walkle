@@ -1,6 +1,7 @@
 import {md5} from "../upstream.js";
 
 import CountdownTillNext from "./CountdownTillNext.js";
+import AerialView from "./AerialView.js";
 
 export default {
   // props: {
@@ -42,7 +43,7 @@ export default {
   // },
   components: {
     CountdownTillNext,
-    // Style,
+    AerialView,
     // StencilEditor,
     // Input,
   },
@@ -52,6 +53,10 @@ export default {
         {{hashPair}}
         {{latLong}}
       </div>
+      <AerialView
+        :lat="latLong[0]"
+        :long="latLong[1]"
+      />
       <CountdownTillNext
         :start-in-seconds="startInSeconds"
         :freq-in-seconds="freqInSeconds"
