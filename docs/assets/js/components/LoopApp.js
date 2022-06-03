@@ -18,6 +18,7 @@ export default {
       unit: params.unit,
       radius: params.radius,
       hereLatLong: [undefined, undefined],
+      attempts: [],
     }
   },
   computed: {
@@ -35,6 +36,10 @@ export default {
       // TODO: clean up copy and paste.
       function geolocationSuccess(position) {
         this.hereLatLong = [position.coords.latitude, position.coords.longitude];
+        this.attempts.push({
+          distance: this.distance,
+          direction: this.direction
+        })
       }
       function geolocationError() {
         alert('Geolocation failed!');
@@ -57,8 +62,12 @@ export default {
         :lat="destLatLong[0]"
         :long="destLatLong[1]"
       /> 
-      Distance: {{distance}}
-      Direction: {{direction}}
+      <table>
+        <tr v-for="attempt in attempts">
+          <td>{{attempt.distance}} {{attempt.direction}}</td>
+        </tr>
+      </table>
+      <button @click="updateHere">Closer?</button>
     </div>
   `
 }
