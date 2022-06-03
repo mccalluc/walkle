@@ -13,7 +13,17 @@ export default {
       gridInDegrees: 1/60,
       unit: 'mile',
       radiusUnitless: 1,
+      latLong: [undefined, undefined],
     }
+  },
+  created() {
+    function geolocationSuccess(position) {
+      this.latLong = [position.coords.latitude, position.coords.longitude];
+    }
+    function geolocationError() {
+      alert('Geolocation failed!');
+    }
+    navigator.geolocation.getCurrentPosition(geolocationSuccess.bind(this), geolocationError);
   },
   computed: {
     hashPair() {
@@ -23,7 +33,7 @@ export default {
         (bytes[0] + 256 * bytes[1]) / (256**2),
         (bytes[2] + 256 * bytes[3]) / (256**2)
       ];
-    }
+    },
   },
   // methods: {
   //   downloadFont() {
@@ -40,6 +50,7 @@ export default {
     <div>
       <div>
         {{hashPair}}
+        {{latLong}}
       </div>
       <CountdownTillNext
         :start-in-seconds="startInSeconds"
