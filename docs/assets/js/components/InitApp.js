@@ -13,7 +13,7 @@ export default {
       freqInSeconds: 60 * 60,
       gridInDegrees: 1/60,
       unit: 'mile',
-      radiusUnitless: 1,
+      radius: 1,
       origLatLong: [undefined, undefined],
     }
   },
@@ -46,9 +46,9 @@ export default {
         long - grid/2 + this.hashPair[1] * grid
       ];
     },
-    destLatLongUrl() {
+    loopUrl() {
       const [lat, long] = this.destLatLong;
-      return `#dest=${lat},${long}`; 
+      return `#dest=${lat},${long}&unit=${this.unit}&radius=${this.radius}`; 
     }
   },
   // methods: {
@@ -64,7 +64,7 @@ export default {
   },
   template: `
     <div>
-      <a :href="destLatLongUrl">Start walking</a> to
+      <a :href="loopUrl">Start walking</a> to
       <AerialView
         :lat="destLatLong[0]"
         :long="destLatLong[1]"
@@ -97,7 +97,7 @@ export default {
           </select>
 
         destination radius:
-          <select v-model="radiusUnitless">
+          <select v-model="radius">
             <option :value="1">1 {{unit}}</option>
             <option :value="1/2">1/2 {{unit}}</option>
             <option :value="1/4">1/4 {{unit}}</option>
