@@ -1,4 +1,4 @@
-import Countdown from "./Countdown.js";
+import CountdownTillNext from "./CountdownTillNext.js";
 
 export default {
   // props: {
@@ -6,10 +6,10 @@ export default {
   // },
   data() {
     return {
-      frequency_s: 60 * 60,
-      neighborhood_deg: 1/60,
+      freqInSeconds: 60 * 60,
+      gridInDegrees: 1/60,
       unit: 'mile',
-      radius_either: 1,
+      radiusUnitless: 1,
     }
   },
   // methods: {
@@ -18,7 +18,7 @@ export default {
   //   },
   // },
   components: {
-    Countdown,
+    CountdownTillNext,
     // Style,
     // StencilEditor,
     // Input,
@@ -26,22 +26,22 @@ export default {
   template: `
     <div>
       <div>
-        {{frequency_s}}
-        {{neighborhood_deg}}
+        {{freqInSeconds}}
+        {{gridInDegrees}}
         {{unit}}
-        {{target_either}}
+        {{radiusUnitless}}
       </div>
-      <Countdown :frequency_s="frequency_s" />
+      <CountdownTillNext :freq-in-seconds="freqInSeconds" />
       <details open="1">
         <summary>Settings</summary>
         frequency:
-          <select v-model="frequency_s">
-            <option :value="60">Minutely</option>
-            <option :value="60 * 60">Hourly</option>
-            <option :value="60 * 60 * 24">Daily</option>
+          <select v-model="freqInSeconds">
+            <option :value="60">minutely</option>
+            <option :value="60 * 60">hourly</option>
+            <option :value="60 * 60 * 24">daily</option>
           </select>
-        neighborhood:
-          <select v-model="neighborhood_deg">
+        grid:
+          <select v-model="gridInDegrees">
             <option :value="1 / 60">1'</option>
             <option :value="2 / 60">2'</option>
             <option :value="3 / 60">3'</option>
@@ -52,7 +52,7 @@ export default {
             <option value="km">km</option>
           </select>
         radius:
-          <select v-model="radius_either">
+          <select v-model="radiusUnitless">
             <option :value="1">1 {{unit}}</option>
             <option :value="1/2">1/2 {{unit}}</option>
             <option :value="1/4">1/4 {{unit}}</option>

@@ -1,7 +1,7 @@
 
 export default {
   props: {
-    frequency_s: Number,
+    freqInSeconds: Number,
   },
   data() {
     return {
@@ -14,7 +14,7 @@ export default {
 		}, 1000)
   },
   computed: {
-    next_s() {return Math.ceil((this.now_s || 0) / this.frequency_s) * this.frequency_s},
+    next_s() {return Math.ceil((this.now_s || 0) / this.freqInSeconds) * this.freqInSeconds},
     remaining_s() {return this.next_s - this.now_s},
     remaining_str() {
       const date = new Date(0);
