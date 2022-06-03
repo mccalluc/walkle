@@ -1,3 +1,5 @@
+import Countdown from "./Countdown.js";
+
 export default {
   // props: {
   //   init: Object,
@@ -10,22 +12,13 @@ export default {
       radius_either: 1,
     }
   },
-  computed: {
-    now_s() {return Math.floor(Date.now() / 1000)},
-    next_s() {return Math.ceil((this.now_s || 0) / this.frequency_s) * this.frequency_s},
-    remaining_s() {return this.next_s - this.now_s},
-    remaining_str() {
-      const date = new Date(0);
-      date.setSeconds(this.remaining_s);
-      return date.toISOString().substring(11, 19)
-    }
-  },
   // methods: {
   //   downloadFont() {
   //     this.font.download()
   //   },
   // },
   components: {
+    Countdown,
     // Style,
     // StencilEditor,
     // Input,
@@ -38,13 +31,12 @@ export default {
         {{unit}}
         {{target_either}}
       </div>
-      <div>
-        Next walkle in: {{remaining_str}}
-      </div>
+      <Countdown :frequency_s="frequency_s" />
       <details open="1">
         <summary>Settings</summary>
         frequency:
           <select v-model="frequency_s">
+            <option :value="60">Minutely</option>
             <option :value="60 * 60">Hourly</option>
             <option :value="60 * 60 * 24">Daily</option>
           </select>
