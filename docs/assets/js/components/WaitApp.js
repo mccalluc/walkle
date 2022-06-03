@@ -6,6 +6,7 @@ export default {
   // },
   data() {
     return {
+      startInSeconds: Math.floor(Date.now() / 1000),
       freqInSeconds: 60 * 60,
       gridInDegrees: 1/60,
       unit: 'mile',
@@ -31,7 +32,10 @@ export default {
         {{unit}}
         {{radiusUnitless}}
       </div>
-      <CountdownTillNext :freq-in-seconds="freqInSeconds" />
+      <CountdownTillNext
+        :start-in-seconds="startInSeconds"
+        :freq-in-seconds="freqInSeconds"
+      />
       <details open="1">
         <summary>Settings</summary>
         frequency:

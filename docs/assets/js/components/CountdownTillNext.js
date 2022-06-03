@@ -1,30 +1,31 @@
 
 export default {
   props: {
+    startInSeconds: Number,
     freqInSeconds: Number,
   },
   data() {
     return {
-      now_s: Math.floor(Date.now() / 1000)
+      nowInSeconds: Math.floor(Date.now() / 1000)
     }
   },
   created() {
     setInterval(() => {
-			this.now_s++;
+			this.nowInSeconds++;
 		}, 1000)
   },
   computed: {
-    next_s() {return Math.ceil((this.now_s || 0) / this.freqInSeconds) * this.freqInSeconds},
-    remaining_s() {return this.next_s - this.now_s},
-    remaining_str() {
+    nextInSeconds() {return Math.ceil(this.startInSeconds / this.freqInSeconds) * this.freqInSeconds},
+    remainingSeconds() {return this.nextInSeconds - this.nowInSeconds},
+    remainingFormatted() {
       const date = new Date(0);
-      date.setSeconds(this.remaining_s);
+      date.setSeconds(this.remainingSeconds);
       return date.toISOString().substring(11, 19)
     }
   },
   template: `
     <div>
-      Next walkle in: {{remaining_str}}
+      Next walkle in: {{remainingFormatted}}
     </div>
   `
 }
