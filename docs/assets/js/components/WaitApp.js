@@ -14,17 +14,20 @@ export default {
       gridInDegrees: 1/60,
       unit: 'mile',
       radiusUnitless: 1,
-      latLong: [undefined, undefined],
+      origLatLong: [undefined, undefined],
     }
   },
   created() {
     function geolocationSuccess(position) {
-      this.latLong = [position.coords.latitude, position.coords.longitude];
+      this.origLatLong = [position.coords.latitude, position.coords.longitude];
     }
     function geolocationError() {
       alert('Geolocation failed!');
     }
-    navigator.geolocation.getCurrentPosition(geolocationSuccess.bind(this), geolocationError);
+    navigator.geolocation.getCurrentPosition(
+      geolocationSuccess.bind(this),
+      geolocationError
+    );
   },
   computed: {
     hashPair() {
@@ -35,6 +38,14 @@ export default {
         (bytes[2] + 256 * bytes[3]) / (256**2)
       ];
     },
+    destLatLong() {
+      const [lat, long] = this.origLatLong;
+      const grid = this.gridInDegrees;
+      return [
+        lat - grid/2 + this.hashPair[0] * grid,
+        long - grid/2 + this.hashPair[1] * grid
+      ];
+    }
   },
   // methods: {
   //   downloadFont() {
@@ -49,38 +60,44 @@ export default {
   },
   template: `
     <div>
-      <div>
-        {{hashPair}}
-        {{latLong}}
-      </div>
+      Ready to walk from
       <AerialView
-        :lat="latLong[0]"
-        :long="latLong[1]"
+        :lat="origLatLong[0]"
+        :long="origLatLong[1]"
       />
+      to
+      <AerialView
+        :lat="destLatLong[0]"
+        :long="destLatLong[1]"
+      />?      
       <CountdownTillNext
         :start-in-seconds="startInSeconds"
         :freq-in-seconds="freqInSeconds"
       />
       <details open="1">
         <summary>Settings</summary>
+
         frequency:
           <select v-model="freqInSeconds">
             <option :value="60">minutely</option>
             <option :value="60 * 60">hourly</option>
             <option :value="60 * 60 * 24">daily</option>
           </select>
+
         grid:
           <select v-model="gridInDegrees">
             <option :value="1 / 60">1'</option>
             <option :value="2 / 60">2'</option>
             <option :value="3 / 60">3'</option>
           </select>
+
         unit:
           <select v-model="unit">
             <option value="mile">mile</option>
             <option value="km">km</option>
           </select>
-        radius:
+
+        destination radius:
           <select v-model="radiusUnitless">
             <option :value="1">1 {{unit}}</option>
             <option :value="1/2">1/2 {{unit}}</option>

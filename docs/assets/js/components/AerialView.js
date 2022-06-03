@@ -6,14 +6,14 @@ export default {
   },
   data() {
     return {
-      width: 500,
-      height: 500,
+      width: 300,
+      height: 300,
     }
   },
   computed: {
     src() {
       // TODO: Handle initial undef.
-      const params = `w=${this.width}&h=${this.height}&cp=${this.lat}~${this.long}&lvl=19&sty=a`;
+      const params = `w=${this.width}&h=${this.height}&cp=${this.lat}~${this.long}&lvl=20&sty=a`;
       return `https://www.bing.com/maps/embed?${params}`;
     },
   },
