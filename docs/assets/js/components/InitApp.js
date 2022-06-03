@@ -59,8 +59,6 @@ export default {
   components: {
     CountdownTillNext,
     AerialView,
-    // StencilEditor,
-    // Input,
   },
   template: `
     <div>

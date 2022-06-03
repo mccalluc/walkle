@@ -8,3 +8,6 @@
 
 export {default as md5} from 'https://cdn.skypack.dev/js-md5@0.7.3';
 export {getDistance, getCompassDirection} from 'https://cdn.skypack.dev/geolib@3.3.3';
+
+// TODO: Use optimized URLs
+// TODO: Just download part of geolib.

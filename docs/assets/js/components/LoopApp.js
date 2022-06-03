@@ -1,5 +1,8 @@
 import {getDistance, getCompassDirection} from "../upstream.js";
 
+import AerialView from "./AerialView.js";
+
+
 function ll(latLong) {
   const [latitude, longitude] = latLong;
   return {latitude, longitude};
@@ -45,10 +48,17 @@ export default {
   created() {
     this.updateHere();
   },
+  components: {
+    AerialView,
+  },
   template: `
     <div>
-    Distance: {{distance}}
-    Direction: {{direction}}
+      <AerialView
+        :lat="destLatLong[0]"
+        :long="destLatLong[1]"
+      /> 
+      Distance: {{distance}}
+      Direction: {{direction}}
     </div>
   `
 }
