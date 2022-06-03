@@ -23,13 +23,12 @@ layout: default
 {% endif %}
 
 <script type="module">
-  import WaitApp from '{{ site.baseurl }}/assets/js/components/WaitApp.js';
+  import InitApp from '{{ site.baseurl }}/assets/js/components/InitApp.js';
   import LoopApp from '{{ site.baseurl }}/assets/js/components/LoopApp.js';
-  import getInit from '{{ site.baseurl }}/assets/js/getInit.js';
+
+  window.onhashchange = () => { location.reload(); }
 
   Vue.createApp(
-    {
-      components: { App: location.search ? LoopApp : WaitApp }
-    }
+    {components: { App: location.hash ? LoopApp : InitApp }}
   ).mount('#app-container');
 </script>

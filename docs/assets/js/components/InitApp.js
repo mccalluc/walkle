@@ -45,6 +45,10 @@ export default {
         lat - grid/2 + this.hashPair[0] * grid,
         long - grid/2 + this.hashPair[1] * grid
       ];
+    },
+    destLatLongUrl() {
+      const [lat, long] = this.destLatLong;
+      return `#dest=${lat},${long}`; 
     }
   },
   // methods: {
@@ -60,16 +64,11 @@ export default {
   },
   template: `
     <div>
-      Ready to walk from
-      <AerialView
-        :lat="origLatLong[0]"
-        :long="origLatLong[1]"
-      />
-      to
+      <a :href="destLatLongUrl">Start walking</a> to
       <AerialView
         :lat="destLatLong[0]"
         :long="destLatLong[1]"
-      />?      
+      />     
       <CountdownTillNext
         :start-in-seconds="startInSeconds"
         :freq-in-seconds="freqInSeconds"
