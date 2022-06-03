@@ -6,4 +6,4 @@
 // and I'm not sure how to get that conditionality in here without breaking mocha,
 // so it's still pulled in as global in the HTML.
 
-// export {default as xyz} from 'https://cdn.skypack.dev/xyz@0.0.0';
+export {default as md5} from 'https://cdn.skypack.dev/js-md5@0.7.3';

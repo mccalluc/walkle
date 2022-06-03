@@ -1,3 +1,5 @@
+import {md5} from "../upstream.js";
+
 import CountdownTillNext from "./CountdownTillNext.js";
 
 export default {
@@ -11,6 +13,16 @@ export default {
       gridInDegrees: 1/60,
       unit: 'mile',
       radiusUnitless: 1,
+    }
+  },
+  computed: {
+    hashPair() {
+      const seed = Math.floor(this.startInSeconds / this.freqInSeconds);
+      const bytes = md5.array(String(seed));
+      return [
+        (bytes[0] + 256 * bytes[1]) / (256**2),
+        (bytes[2] + 256 * bytes[3]) / (256**2)
+      ];
     }
   },
   // methods: {
@@ -27,10 +39,7 @@ export default {
   template: `
     <div>
       <div>
-        {{freqInSeconds}}
-        {{gridInDegrees}}
-        {{unit}}
-        {{radiusUnitless}}
+        {{hashPair}}
       </div>
       <CountdownTillNext
         :start-in-seconds="startInSeconds"

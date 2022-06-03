@@ -15,8 +15,11 @@ export default {
 		}, 1000)
   },
   computed: {
-    nextInSeconds() {return Math.ceil(this.startInSeconds / this.freqInSeconds) * this.freqInSeconds},
-    remainingSeconds() {return this.nextInSeconds - this.nowInSeconds},
+    remainingSeconds() {
+      const nextInSeconds = 
+        Math.ceil(this.startInSeconds / this.freqInSeconds)
+        * this.freqInSeconds;
+      return nextInSeconds - this.nowInSeconds},
     remainingFormatted() {
       const date = new Date(0);
       date.setSeconds(this.remainingSeconds);
