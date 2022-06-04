@@ -4,6 +4,17 @@ import {KM, MILE} from "../units.js";
 import CountdownTillNext from "./CountdownTillNext.js";
 import AerialView from "./AerialView.js";
 
+function getGeolocationPromise() {
+  return new Promise((resolve) => {
+    navigator.geolocation.getCurrentPosition(resolve);
+  })
+}
+
+async function getLatLong() {
+  const {coords} = await getGeolocationPromise();
+  return [coords.latitude, coords.longitude]
+}
+
 export default {
   data() {
     return {
@@ -16,17 +27,8 @@ export default {
       KM, MILE,
     }
   },
-  created() {
-    function geolocationSuccess(position) {
-      this.origLatLong = [position.coords.latitude, position.coords.longitude];
-    }
-    function geolocationError() {
-      alert('Geolocation failed!');
-    }
-    navigator.geolocation.getCurrentPosition(
-      geolocationSuccess.bind(this),
-      geolocationError
-    );
+  async created() {
+    this.origLatLong = await getLatLong();
   },
   computed: {
     hashPair() {
@@ -50,11 +52,6 @@ export default {
       return `#dest=${lat},${long}&unit=${this.unit}&radius=${this.radius}`; 
     }
   },
-  // methods: {
-  //   downloadFont() {
-  //     this.font.download()
-  //   },
-  // },
   components: {
     CountdownTillNext,
     AerialView,
