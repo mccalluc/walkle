@@ -19,6 +19,7 @@ export default {
       goalLatLong: params.goal.split(',').map(l => Number(l)),
       unit: params.unit,
       radius: Number(params.radius),
+      mapStyle: params.mapStyle,
       hereLatLong: [undefined, undefined],
       attempts: [],
       grid,
@@ -65,7 +66,7 @@ export default {
   },
   template: `
     <div>
-      <div>
+      <div class="pb-3">
         Pick a goal farther:
         <button @click="move(grid,0)()" class="btn btn-sm btn-outline-dark px-1 py-0">North</button> /
         <button @click="move(-grid,0)()" class="btn btn-sm btn-outline-dark px-1 py-0">South</button> /
@@ -75,6 +76,7 @@ export default {
       <AerialView
         :lat="goalLatLong[0]"
         :long="goalLatLong[1]"
+        :mapStyle="mapStyle"
       />
       <div>
         <button

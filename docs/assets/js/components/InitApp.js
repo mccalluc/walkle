@@ -10,9 +10,10 @@ export default {
   data() {
     return {
       startInSeconds: Math.floor(Date.now() / 1000),
-      freqInSeconds: Number(localStorage.freqInSeconds) || 60 * 60,
+      freqInSeconds: Number(localStorage.freqInSeconds) || 60 * 60 * 24,
       unit: localStorage.unit || MILE,
       radius: localStorage.radius || 1/20,
+      mapStyle: 'none',
       origLatLong: [undefined, undefined],
       KM, MILE,
     }
@@ -21,6 +22,7 @@ export default {
     freqInSeconds(newValue) {localStorage.freqInSeconds = newValue},
     unit(newValue)          {localStorage.unit = newValue},
     radius(newValue)        {localStorage.radius = newValue},
+    mapStyle(newValue)      {localStorage.mapStyle = newValue}
   },
   async created() {
     this.origLatLong = await getLatLong();
@@ -49,8 +51,13 @@ export default {
       ]
     },
     loopUrl() {
-      const [lat, long] = this.goalLatLong;
-      return `#goal=${lat},${long}&unit=${this.unit}&radius=${this.radius}`; 
+      const params = new URLSearchParams({
+        goal: this.goalLatLong.join(','),
+        unit: this.unit,
+        radius: this.radius,
+        mapStyle: this.mapStyle,
+      })
+      return `#${params}`; 
     }
   },
   components: {
@@ -62,6 +69,7 @@ export default {
       <AerialView
         :lat="goalLatLong[0]"
         :long="goalLatLong[1]"
+        :mapStyle="mapStyle"
       /> 
       <a :href="loopUrl" class="btn btn-outline-dark">Start walking</a>    
       <CountdownTillNext
@@ -100,8 +108,18 @@ export default {
                 <td>
                   <select v-model="radius">
                     <option :value="1/10">1/10 {{unit}}</option>
-                    <option :value="1/30">1/30 {{unit}}</option>
+                    <option :value="1/40">1/40 {{unit}}</option>
                     <option :value="1/100">1/100 {{unit}}</option>
+                  </select>
+                </td>
+              </tr>
+
+              <tr>
+                <td>map style</td>
+                <td>
+                  <select v-model="mapStyle">
+                    <option value="none">none</option>
+                    <option value="photo">photo</option>
                   </select>
                 </td>
               </tr>

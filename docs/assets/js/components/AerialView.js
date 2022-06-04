@@ -3,6 +3,7 @@ export default {
   props: {
     lat: Number,
     long: Number,
+    mapStyle: String,
   },
   data() {
     return {
@@ -18,7 +19,7 @@ export default {
     },
   },
   template: `
-    <div>
+    <div v-if="mapStyle !== 'none'">
       <iframe
         :width="width"
         :height="height"
