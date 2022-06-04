@@ -68,38 +68,61 @@ export default {
         :start-in-seconds="startInSeconds"
         :freq-in-seconds="freqInSeconds"
       />
-      <details>
-        <summary>Settings</summary>
+      <div class="card">
+        <div class="card-body">
+          <details>
+            <summary>Settings</summary>
 
-        frequency:
-          <select v-model="freqInSeconds">
-            <option :value="60">minutely</option>
-            <option :value="60 * 60">hourly</option>
-            <option :value="60 * 60 * 24">daily</option>
-          </select>
+            <table>
+              <tr>
+                <td>frequency</td>
+                <td>
+                  <select v-model="freqInSeconds">
+                    <option :value="60">minutely</option>
+                    <option :value="60 * 60">hourly</option>
+                    <option :value="60 * 60 * 24">daily</option>
+                  </select>
+                </td>
+              </tr>
 
-        grid:
-          <select v-model="gridInDegrees">
-            <option :value="1 / 60">1'</option>
-            <option :value="2 / 60">2'</option>
-            <option :value="3 / 60">3'</option>
-          </select>
+              <tr>
+                <td>grid</td>
+                <td>
+                  <select v-model="gridInDegrees">
+                    <option :value="1 / 60">1'</option>
+                    <option :value="2 / 60">2'</option>
+                    <option :value="3 / 60">3'</option>
+                  </select>
+                </td>
+              </tr>
 
-        unit:
-          <select v-model="unit">
-            <option value="mile">mile</option>
-            <option value="km">km</option>
-          </select>
+              <tr>
+                <td>unit</td>
+                <td>
+                  <select v-model="unit">
+                    <option value="mile">mile</option>
+                    <option value="km">km</option>
+                  </select>
+                </td>
+              </tr>
 
-        destination radius:
-          <select v-model="radius">
-            <option :value="1">1 {{unit}}</option>
-            <option :value="1/2">1/2 {{unit}}</option>
-            <option :value="1/4">1/4 {{unit}}</option>
-            <option :value="1/10">1/10 {{unit}}</option>
-            <option :value="1/20">1/20 {{unit}}</option>
-          </select>
-      </details>
+              <tr>
+                <td>target radius</td>
+                <td>
+                  <select v-model="radius">
+                    <option :value="1">1 {{unit}}</option>
+                    <option :value="1/2">1/2 {{unit}}</option>
+                    <option :value="1/4">1/4 {{unit}}</option>
+                    <option :value="1/10">1/10 {{unit}}</option>
+                    <option :value="1/20">1/20 {{unit}}</option>
+                  </select>
+                </td>
+              </tr>
+            </table>
+
+          </details>
+        </div>
+      </div>
     </div>
   `
 }
