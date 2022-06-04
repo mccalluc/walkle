@@ -1,5 +1,5 @@
 import {getDistance, getCompassDirection} from "../upstream.js";
-import {KM, MILE} from "../units.js";
+import {KM, MILE, grid} from "../units.js";
 import getLatLong from "../getLatLong.js";
 
 import AerialView from "./AerialView.js";
@@ -9,8 +9,6 @@ function ll(latLong) {
   const [latitude, longitude] = latLong;
   return {latitude, longitude};
 }
-
-const grid = 5 / 60; // ie, 5 minutes of a degree
 
 export default {
   data() {

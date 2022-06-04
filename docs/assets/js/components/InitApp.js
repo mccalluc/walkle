@@ -1,11 +1,10 @@
 import {md5} from "../upstream.js";
-import {KM, MILE} from "../units.js";
+import {KM, MILE, grid} from "../units.js";
 import getLatLong from "../getLatLong.js";
 
 import CountdownTillNext from "./CountdownTillNext.js";
 import AerialView from "./AerialView.js";
 
-const grid = 5 / 60; // ie, 5 minutes of a degree
 
 export default {
   data() {
