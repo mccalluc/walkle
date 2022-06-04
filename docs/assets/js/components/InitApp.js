@@ -4,16 +4,13 @@ import CountdownTillNext from "./CountdownTillNext.js";
 import AerialView from "./AerialView.js";
 
 export default {
-  // props: {
-  //   init: Object,
-  // },
   data() {
     return {
       startInSeconds: Math.floor(Date.now() / 1000),
       freqInSeconds: 60 * 60,
-      gridInDegrees: 1/60,
+      gridInDegrees: 3/60,
       unit: 'mile',
-      radius: 1,
+      radius: 1/20,
       origLatLong: [undefined, undefined],
     }
   },
