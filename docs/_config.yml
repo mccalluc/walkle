@@ -1,0 +1,12 @@
+title: walkle
+description: "Like wordle, but for walks"
+baseurl: "/walkle"
+url: "https://mccalluc.github.io"
+
+# Build settings
+theme: minima
+plugins: []
+
+# Excluded items can be processed by explicitly listing the directories or
+# their entries' file path in the `include:` list.
+exclude: []
