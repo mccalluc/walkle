@@ -33,8 +33,12 @@ export default {
       }[this.unit]
     },
     distance() {
-      const distanceInMeters = getDistance(ll(this.hereLatLong), ll(this.goalLatLong));
-      return (distanceInMeters * this.coversionFactor).toPrecision(2);
+      try {
+        const distanceInMeters = getDistance(ll(this.hereLatLong), ll(this.goalLatLong));
+        return (distanceInMeters * this.coversionFactor).toPrecision(2);
+      } catch {
+        return undefined;
+      }
     },
     direction() {
       const compassDirection = getCompassDirection(ll(this.hereLatLong), ll(this.goalLatLong));
@@ -79,14 +83,15 @@ export default {
         :mapStyle="mapStyle"
       />
       <div>
+        <div v-if="distance < radius">You're there! Awesome!</div>
         <button
-          v-if="distance > radius"
+          v-else
           @click="updateHere"
           class="btn btn-outline-dark"
         >
-          Am I closer?
+          Am I there yet?
         </button>
-        <div v-else>You're there! Awesome!</div>
+        
       </div>
       <table>
         <tr v-for="attempt in attempts">
