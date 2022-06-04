@@ -1,4 +1,5 @@
 import {md5} from "../upstream.js";
+import {KM, MILE} from "../units.js";
 
 import CountdownTillNext from "./CountdownTillNext.js";
 import AerialView from "./AerialView.js";
@@ -12,6 +13,7 @@ export default {
       unit: 'mile',
       radius: 1/20,
       origLatLong: [undefined, undefined],
+      KM, MILE,
     }
   },
   created() {
@@ -100,8 +102,8 @@ export default {
                 <td>unit</td>
                 <td>
                   <select v-model="unit">
-                    <option value="mile">mile</option>
-                    <option value="km">km</option>
+                    <option :value="MILE">{{MILE}}</option>
+                    <option :value="KM">{{KM}}</option>
                   </select>
                 </td>
               </tr>

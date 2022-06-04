@@ -1,4 +1,5 @@
 import {getDistance, getCompassDirection} from "../upstream.js";
+import {KM, MILE} from "../units.js";
 
 import AerialView from "./AerialView.js";
 
@@ -24,8 +25,8 @@ export default {
   computed: {
     coversionFactor() {
       return {
-        mile: 1/1609,
-        km: 1/1000
+        [MILE]: 1/1609,
+        [KM]: 1/1000
       }[this.unit]
     },
     distance() {
