@@ -9,13 +9,19 @@ export default {
   data() {
     return {
       startInSeconds: Math.floor(Date.now() / 1000),
-      freqInSeconds: 60 * 60,
-      gridInDegrees: 3/60,
-      unit: 'mile',
-      radius: 1/20,
+      freqInSeconds: Number(localStorage.freqInSeconds) || 60 * 60,
+      gridInDegrees: Number(localStorage.gridInDegrees) || 3/60,
+      unit: localStorage.unit || MILE,
+      radius: localStorage.radius || 1/20,
       origLatLong: [undefined, undefined],
       KM, MILE,
     }
+  },
+  watch: {
+    freqInSeconds(newValue) {localStorage.freqInSeconds = newValue},
+    gridInDegrees(newValue) {localStorage.gridInDegrees = newValue},
+    unit(newValue)          {localStorage.unit = newValue},
+    radius(newValue)        {localStorage.radius = newValue},
   },
   async created() {
     this.origLatLong = await getLatLong();
