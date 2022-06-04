@@ -1,19 +1,9 @@
 import {md5} from "../upstream.js";
 import {KM, MILE} from "../units.js";
+import getLatLong from "../getLatLong.js";
 
 import CountdownTillNext from "./CountdownTillNext.js";
 import AerialView from "./AerialView.js";
-
-function getGeolocationPromise() {
-  return new Promise((resolve) => {
-    navigator.geolocation.getCurrentPosition(resolve);
-  })
-}
-
-async function getLatLong() {
-  const {coords} = await getGeolocationPromise();
-  return [coords.latitude, coords.longitude]
-}
 
 export default {
   data() {

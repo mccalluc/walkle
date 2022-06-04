@@ -1,5 +1,6 @@
 import {getDistance, getCompassDirection} from "../upstream.js";
 import {KM, MILE} from "../units.js";
+import getLatLong from "../getLatLong.js";
 
 import AerialView from "./AerialView.js";
 
@@ -39,21 +40,12 @@ export default {
     }
   },
   methods: {
-    updateHere() {
-      function geolocationSuccess(position) {
-        this.hereLatLong = [position.coords.latitude, position.coords.longitude];
-        this.attempts.push({
-          distance: this.distance,
-          direction: this.direction
-        })
-      }
-      function geolocationError() {
-        alert('Geolocation failed!');
-      }
-      navigator.geolocation.getCurrentPosition(
-        geolocationSuccess.bind(this),
-        geolocationError
-      );
+    async updateHere() {
+      this.hereLatLong = await getLatLong();
+      this.attempts.push({
+        distance: this.distance,
+        direction: this.direction
+      });
     }
   },
   created() {
