@@ -10,7 +10,6 @@ export default {
     return {
       startInSeconds: Math.floor(Date.now() / 1000),
       freqInSeconds: Number(localStorage.freqInSeconds) || 60 * 60,
-      gridInDegrees: Number(localStorage.gridInDegrees) || 3/60,
       unit: localStorage.unit || MILE,
       radius: localStorage.radius || 1/20,
       origLatLong: [undefined, undefined],
@@ -19,7 +18,6 @@ export default {
   },
   watch: {
     freqInSeconds(newValue) {localStorage.freqInSeconds = newValue},
-    gridInDegrees(newValue) {localStorage.gridInDegrees = newValue},
     unit(newValue)          {localStorage.unit = newValue},
     radius(newValue)        {localStorage.radius = newValue},
   },
@@ -37,7 +35,7 @@ export default {
     },
     destLatLong() {
       const [lat, long] = this.origLatLong;
-      const grid = this.gridInDegrees;
+      const grid = 5;
       return [
         lat - grid/2 + this.hashPair[0] * grid,
         long - grid/2 + this.hashPair[1] * grid
@@ -76,17 +74,6 @@ export default {
                     <option :value="60">minutely</option>
                     <option :value="60 * 60">hourly</option>
                     <option :value="60 * 60 * 24">daily</option>
-                  </select>
-                </td>
-              </tr>
-
-              <tr>
-                <td>grid</td>
-                <td>
-                  <select v-model="gridInDegrees">
-                    <option :value="1 / 60">1'</option>
-                    <option :value="2 / 60">2'</option>
-                    <option :value="3 / 60">3'</option>
                   </select>
                 </td>
               </tr>
