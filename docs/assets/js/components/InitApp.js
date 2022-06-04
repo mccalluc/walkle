@@ -54,11 +54,11 @@ export default {
   },
   template: `
     <div>
-      <a :href="loopUrl">Start walking</a> to
       <AerialView
         :lat="destLatLong[0]"
         :long="destLatLong[1]"
-      />     
+      /> 
+      <a :href="loopUrl" class="btn btn-outline-dark">Start walking</a>    
       <CountdownTillNext
         :start-in-seconds="startInSeconds"
         :freq-in-seconds="freqInSeconds"
