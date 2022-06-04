@@ -10,17 +10,20 @@ function ll(latLong) {
   return {latitude, longitude};
 }
 
+const grid = 5 / 60; // ie, 5 minutes of a degree
+
 export default {
   data() {
     const params = Object.fromEntries(
       new URLSearchParams(location.hash.slice(1))
     );
     return {
-      destLatLong: params.dest.split(','),
+      destLatLong: params.dest.split(',').map(l => Number(l)),
       unit: params.unit,
-      radius: params.radius,
+      radius: Number(params.radius),
       hereLatLong: [undefined, undefined],
       attempts: [],
+      grid,
     }
   },
   computed: {
@@ -35,8 +38,8 @@ export default {
       return (distanceInMeters * this.coversionFactor).toPrecision(2);
     },
     direction() {
-      const comassDirection = getCompassDirection(ll(this.hereLatLong), ll(this.destLatLong));
-      return comassDirection;
+      const compassDirection = getCompassDirection(ll(this.hereLatLong), ll(this.destLatLong));
+      return compassDirection;
     }
   },
   methods: {
@@ -46,6 +49,14 @@ export default {
         distance: this.distance,
         direction: this.direction
       });
+    },
+    move(dLat, dLong) {
+      function callback() {
+        const [lat, long] = this.destLatLong;
+        this.destLatLong = [lat + dLat, long + dLong];
+        this.updateHere();
+      }
+      return callback.bind(this);
     }
   },
   created() {
@@ -56,6 +67,13 @@ export default {
   },
   template: `
     <div>
+      <div>
+        Pick a goal farther:
+        <button @click="move(grid,0)()" class="btn btn-sm btn-outline-dark px-1 py-0">North</button> /
+        <button @click="move(-grid,0)()" class="btn btn-sm btn-outline-dark px-1 py-0">South</button> /
+        <button @click="move(0,grid)()" class="btn btn-sm btn-outline-dark px-1 py-0">East</button> /
+        <button @click="move(0,-grid)()" class="btn btn-sm btn-outline-dark px-1 py-0">West</button>
+      </div>
       <AerialView
         :lat="destLatLong[0]"
         :long="destLatLong[1]"
@@ -66,7 +84,7 @@ export default {
           @click="updateHere"
           class="btn btn-outline-dark"
         >
-          Closer?
+          Am I close?
         </button>
         <div v-else>You're there! Awesome!</div>
       </div>
