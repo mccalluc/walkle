@@ -5,6 +5,8 @@ import getLatLong from "../getLatLong.js";
 import CountdownTillNext from "./CountdownTillNext.js";
 import AerialView from "./AerialView.js";
 
+const grid = 5 / 60; // ie, 5 minutes of a degree
+
 export default {
   data() {
     return {
@@ -25,21 +27,27 @@ export default {
     this.origLatLong = await getLatLong();
   },
   computed: {
-    hashPair() {
+    offsetLatLong() {
       const seed = Math.floor(this.startInSeconds / this.freqInSeconds);
       const bytes = md5.array(String(seed));
-      return [
+      const [dx, dy] = [
+        // between 0 and 1:
         (bytes[0] + 256 * bytes[1]) / (256**2),
         (bytes[2] + 256 * bytes[3]) / (256**2)
-      ];
+      ]
+      return [grid * dx, grid * dy];
     },
     destLatLong() {
       const [lat, long] = this.origLatLong;
-      const grid = 5;
+      const [gridLat, gridLong] = [
+        Math.floor(lat / grid) * grid,
+        Math.floor(long / grid) * grid,
+      ]
+      const [offsetLat, offsetLong] = this.offsetLatLong;
       return [
-        lat - grid/2 + this.hashPair[0] * grid,
-        long - grid/2 + this.hashPair[1] * grid
-      ];
+        gridLat + offsetLat,
+        gridLong + offsetLong,
+      ]
     },
     loopUrl() {
       const [lat, long] = this.destLatLong;
