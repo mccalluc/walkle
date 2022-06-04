@@ -37,7 +37,7 @@ export default {
       ]
       return [grid * dx, grid * dy];
     },
-    destLatLong() {
+    goalLatLong() {
       const [lat, long] = this.origLatLong;
       const [gridLat, gridLong] = [
         Math.floor(lat / grid) * grid,
@@ -50,8 +50,8 @@ export default {
       ]
     },
     loopUrl() {
-      const [lat, long] = this.destLatLong;
-      return `#dest=${lat},${long}&unit=${this.unit}&radius=${this.radius}`; 
+      const [lat, long] = this.goalLatLong;
+      return `#goal=${lat},${long}&unit=${this.unit}&radius=${this.radius}`; 
     }
   },
   components: {
@@ -61,8 +61,8 @@ export default {
   template: `
     <div>
       <AerialView
-        :lat="destLatLong[0]"
-        :long="destLatLong[1]"
+        :lat="goalLatLong[0]"
+        :long="goalLatLong[1]"
       /> 
       <a :href="loopUrl" class="btn btn-outline-dark">Start walking</a>    
       <CountdownTillNext
@@ -97,14 +97,12 @@ export default {
               </tr>
 
               <tr>
-                <td>target radius</td>
+                <td>goal radius</td>
                 <td>
                   <select v-model="radius">
-                    <option :value="1">1 {{unit}}</option>
-                    <option :value="1/2">1/2 {{unit}}</option>
-                    <option :value="1/4">1/4 {{unit}}</option>
                     <option :value="1/10">1/10 {{unit}}</option>
-                    <option :value="1/20">1/20 {{unit}}</option>
+                    <option :value="1/30">1/30 {{unit}}</option>
+                    <option :value="1/100">1/100 {{unit}}</option>
                   </select>
                 </td>
               </tr>
