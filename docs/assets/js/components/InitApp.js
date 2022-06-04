@@ -68,7 +68,7 @@ export default {
         :start-in-seconds="startInSeconds"
         :freq-in-seconds="freqInSeconds"
       />
-      <details open="1">
+      <details>
         <summary>Settings</summary>
 
         frequency:
