@@ -1,5 +1,5 @@
 import {md5} from "../upstream.js";
-import {KM, MILE, grid} from "../units.js";
+import {KM, MILE} from "../units.js";
 import getLatLong from "../getLatLong.js";
 
 import CountdownTillNext from "./CountdownTillNext.js";
@@ -12,7 +12,8 @@ export default {
       startInSeconds: Math.floor(Date.now() / 1000),
       freqInSeconds: Number(localStorage.freqInSeconds) || 60 * 60 * 24,
       unit: localStorage.unit || MILE,
-      radius: localStorage.radius || 1/20,
+      grid: Number(localStorage.grid) || 4 / 60,
+      radius: Number(localStorage.radius) || 0.01,
       mapStyle: 'none',
       origLatLong: [undefined, undefined],
       KM, MILE,
@@ -21,6 +22,7 @@ export default {
   watch: {
     freqInSeconds(newValue) {localStorage.freqInSeconds = newValue},
     unit(newValue)          {localStorage.unit = newValue},
+    grid(newValue)          {localStorage.grid = newValue},
     radius(newValue)        {localStorage.radius = newValue},
     mapStyle(newValue)      {localStorage.mapStyle = newValue}
   },
@@ -36,13 +38,13 @@ export default {
         (bytes[0] + 256 * bytes[1]) / (256**2),
         (bytes[2] + 256 * bytes[3]) / (256**2)
       ]
-      return [grid * dx, grid * dy];
+      return [this.grid * dx, this.grid * dy];
     },
     goalLatLong() {
       const [lat, long] = this.origLatLong;
       const [gridLat, gridLong] = [
-        Math.floor(lat / grid) * grid,
-        Math.floor(long / grid) * grid,
+        Math.floor(lat / this.grid) * this.grid,
+        Math.floor(long / this.grid) * this.grid,
       ]
       const [offsetLat, offsetLong] = this.offsetLatLong;
       return [
@@ -54,6 +56,7 @@ export default {
       const params = new URLSearchParams({
         goal: this.goalLatLong.join(','),
         unit: this.unit,
+        grid: this.grid,
         radius: this.radius,
         mapStyle: this.mapStyle,
       })
@@ -104,12 +107,25 @@ export default {
               </tr>
 
               <tr>
+                <td>grid</td>
+                <td>
+                  <select v-model="grid">
+                    <option :value="8 / 60">8'</option>
+                    <option :value="4 / 60">4'</option>
+                    <option :value="2 / 60">2'</option>
+                    <option :value="1 / 60">1'</option>
+                  </select>
+                </td>
+              </tr>
+
+              <tr>
                 <td>goal radius</td>
                 <td>
                   <select v-model="radius">
-                    <option :value="1/10">1/10 {{unit}}</option>
-                    <option :value="1/40">1/40 {{unit}}</option>
-                    <option :value="1/100">1/100 {{unit}}</option>
+                    <option :value="0.1">0.1 {{unit}}</option>
+                    <option :value="0.05">0.05 {{unit}}</option>
+                    <option :value="0.02">0.02 {{unit}}</option>
+                    <option :value="0.01">0.01 {{unit}}</option>
                   </select>
                 </td>
               </tr>

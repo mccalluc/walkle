@@ -1,5 +1,5 @@
 import {getDistance, getCompassDirection} from "../upstream.js";
-import {KM, MILE, grid} from "../units.js";
+import {KM, MILE} from "../units.js";
 import getLatLong from "../getLatLong.js";
 
 import AerialView from "./AerialView.js";
@@ -18,11 +18,11 @@ export default {
     return {
       goalLatLong: params.goal.split(',').map(l => Number(l)),
       unit: params.unit,
+      grid: Number(params.grid),
       radius: Number(params.radius),
       mapStyle: params.mapStyle,
       hereLatLong: [undefined, undefined],
       attempts: [],
-      grid,
     }
   },
   computed: {
