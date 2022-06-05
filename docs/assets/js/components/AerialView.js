@@ -3,6 +3,7 @@ export default {
   props: {
     lat: Number,
     long: Number,
+    mapStyle: String,
   },
   data() {
     return {
@@ -18,12 +19,14 @@ export default {
     },
   },
   template: `
-    <iframe
-      :width="width"
-      :height="height"
-      frameborder="0"
-      :src="src">
-    </iframe>
+    <div v-if="mapStyle !== 'none'">
+      <iframe
+        :width="width"
+        :height="height"
+        frameborder="0"
+        :src="src">
+      </iframe>
+    </div>
   `
 }
 

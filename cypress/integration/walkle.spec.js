@@ -6,6 +6,6 @@ describe('walkle', () => {
   it('works', () => {
     /* Home page */
 
-    cy.contains('Like wordle, but for walks')
+    cy.contains('Start walking')
   })
 })

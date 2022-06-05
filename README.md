@@ -1,9 +1,9 @@
 # walkle
-Like wordle, but for walks instead of words:
-- Every day, it chooses a random point in your neighborhood.
-- It gives you the distance and direction to the point, and you start walking.
-- When you think you're close, check your guess.
-- If if you're not in the radius, it will give use an updated distance and direction.  
+Walkle is like Wordle, but for walks.
+
+- Instead of picking a random word, it picks a random location in your neighborhood.
+- Instead of guessing the letters, you try to walk there.
+- Instead of telling you which letters are right, it tells you how much further and in what direction.
 
 [Start walking!](https://mccalluc.github.io/walkle/)
 

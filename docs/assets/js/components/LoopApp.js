@@ -1,4 +1,6 @@
 import {getDistance, getCompassDirection} from "../upstream.js";
+import {KM, MILE, grid} from "../units.js";
+import getLatLong from "../getLatLong.js";
 
 import AerialView from "./AerialView.js";
 
@@ -14,45 +16,50 @@ export default {
       new URLSearchParams(location.hash.slice(1))
     );
     return {
-      destLatLong: params.dest.split(','),
+      goalLatLong: params.goal.split(',').map(l => Number(l)),
       unit: params.unit,
-      radius: params.radius,
+      radius: Number(params.radius),
+      mapStyle: params.mapStyle,
       hereLatLong: [undefined, undefined],
       attempts: [],
+      grid,
     }
   },
   computed: {
     coversionFactor() {
       return {
-        mile: 1/1609,
-        km: 1/1000
+        [MILE]: 1/1609,
+        [KM]: 1/1000
       }[this.unit]
     },
     distance() {
-      const distanceInMeters = getDistance(ll(this.hereLatLong), ll(this.destLatLong));
-      return (distanceInMeters * this.coversionFactor).toPrecision(2);
+      try {
+        const distanceInMeters = getDistance(ll(this.hereLatLong), ll(this.goalLatLong));
+        return (distanceInMeters * this.coversionFactor).toPrecision(2);
+      } catch {
+        return undefined;
+      }
     },
     direction() {
-      const comassDirection = getCompassDirection(ll(this.hereLatLong), ll(this.destLatLong));
-      return comassDirection;
+      const compassDirection = getCompassDirection(ll(this.hereLatLong), ll(this.goalLatLong));
+      return compassDirection;
     }
   },
   methods: {
-    updateHere() {
-      function geolocationSuccess(position) {
-        this.hereLatLong = [position.coords.latitude, position.coords.longitude];
-        this.attempts.push({
-          distance: this.distance,
-          direction: this.direction
-        })
+    async updateHere() {
+      this.hereLatLong = await getLatLong();
+      this.attempts.push({
+        distance: this.distance,
+        direction: this.direction
+      });
+    },
+    move(dLat, dLong) {
+      function callback() {
+        const [lat, long] = this.goalLatLong;
+        this.goalLatLong = [lat + dLat, long + dLong];
+        this.updateHere();
       }
-      function geolocationError() {
-        alert('Geolocation failed!');
-      }
-      navigator.geolocation.getCurrentPosition(
-        geolocationSuccess.bind(this),
-        geolocationError
-      );
+      return callback.bind(this);
     }
   },
   created() {
@@ -63,19 +70,28 @@ export default {
   },
   template: `
     <div>
+      <div class="pb-3">
+        Pick a goal farther:
+        <button @click="move(grid,0)()" class="btn btn-sm btn-outline-dark px-1 py-0">North</button> /
+        <button @click="move(-grid,0)()" class="btn btn-sm btn-outline-dark px-1 py-0">South</button> /
+        <button @click="move(0,grid)()" class="btn btn-sm btn-outline-dark px-1 py-0">East</button> /
+        <button @click="move(0,-grid)()" class="btn btn-sm btn-outline-dark px-1 py-0">West</button>
+      </div>
       <AerialView
-        :lat="destLatLong[0]"
-        :long="destLatLong[1]"
+        :lat="goalLatLong[0]"
+        :long="goalLatLong[1]"
+        :mapStyle="mapStyle"
       />
       <div>
+        <div v-if="distance < radius">You're there! Awesome!</div>
         <button
-          v-if="distance > radius"
+          v-else
           @click="updateHere"
           class="btn btn-outline-dark"
         >
-          Closer?
+          Am I there yet?
         </button>
-        <div v-else>You're there! Awesome!</div>
+        
       </div>
       <table>
         <tr v-for="attempt in attempts">
