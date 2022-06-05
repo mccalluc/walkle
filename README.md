@@ -5,10 +5,11 @@ Walkle is like Wordle, but for walks.
 - Instead of guessing the letters, you try to walk there.
 - Instead of telling you which letters are right, it tells you how much further and in what direction.
 
+[Start walking!](https://mccalluc.github.io/walkle/)
 
-It also uses Cypress for end-to-end testing, ESLint for linting, and Jekyll for static site generation.
+## Development
 
-Deployed at: https://mccalluc.github.io/walkle/
+Uses Vue.js, Cypress, ESLint, and Jekyll.
 
 When developing locally:
 
