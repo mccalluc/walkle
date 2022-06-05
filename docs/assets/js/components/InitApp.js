@@ -12,7 +12,7 @@ export default {
       startInSeconds: Math.floor(Date.now() / 1000),
       freqInSeconds: Number(localStorage.freqInSeconds) || 60 * 60 * 24,
       unit: localStorage.unit || MILE,
-      radius: localStorage.radius || 1/20,
+      radius: localStorage.radius || 0.01,
       mapStyle: 'none',
       origLatLong: [undefined, undefined],
       KM, MILE,
@@ -107,9 +107,10 @@ export default {
                 <td>goal radius</td>
                 <td>
                   <select v-model="radius">
-                    <option :value="1/10">1/10 {{unit}}</option>
-                    <option :value="1/40">1/40 {{unit}}</option>
-                    <option :value="1/100">1/100 {{unit}}</option>
+                    <option :value="0.1">0.1 {{unit}}</option>
+                    <option :value="0.05">0.05 {{unit}}</option>
+                    <option :value="0.02">0.02 {{unit}}</option>
+                    <option :value="0.01">0.01 {{unit}}</option>
                   </select>
                 </td>
               </tr>
