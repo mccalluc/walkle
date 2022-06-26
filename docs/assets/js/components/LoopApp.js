@@ -48,7 +48,9 @@ export default {
   methods: {
     async updateHere() {
       this.hereLatLong = await getLatLong();
-      this.attempts.push({
+      const attemptsCount = this.attempts.length + 1;
+      this.attempts.unshift({
+        count: attemptsCount,
         distance: this.distance,
         direction: this.direction
       });
@@ -83,7 +85,7 @@ export default {
         :mapStyle="mapStyle"
       />
       <div>
-        <div v-if="distance < radius">You're there! Awesome!</div>
+        <div v-if="distance < radius">You're there! Great job!</div>
         <button
           v-else
           @click="updateHere"
@@ -93,10 +95,13 @@ export default {
         </button>
         
       </div>
-      <table>
-        <tr v-for="attempt in attempts">
-          <td>{{attempt.distance}} {{unit}} {{attempt.direction}}</td>
-        </tr>
+      <table class="table table-bordered">
+        <tbody>
+          <tr v-for="attempt in attempts">
+            <td>#{{attempt.count}}</td>
+            <td>{{attempt.distance}} {{unit}} {{attempt.direction}}</td>
+          </tr>
+        </tbody>
       </table>
     </div>
   `
