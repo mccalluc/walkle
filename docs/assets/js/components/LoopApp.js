@@ -85,7 +85,10 @@ export default {
         :mapStyle="mapStyle"
       />
       <div>
-        <div v-if="distance < radius">You're there! Great job!</div>
+        <div v-if="distance < radius">
+          You're there! Great job!
+          <div class="firework"></div>
+        </div>
         <button
           v-else
           @click="updateHere"
@@ -93,7 +96,6 @@ export default {
         >
           Am I there yet?
         </button>
-        
       </div>
       <table class="table table-bordered">
         <tbody>
