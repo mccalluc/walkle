@@ -72,13 +72,6 @@ export default {
   },
   template: `
     <div>
-      <div class="pb-3">
-        Pick a goal farther:
-        <button @click="move(grid,0)()" class="btn btn-sm btn-outline-dark px-1 py-0">North</button> /
-        <button @click="move(-grid,0)()" class="btn btn-sm btn-outline-dark px-1 py-0">South</button> /
-        <button @click="move(0,grid)()" class="btn btn-sm btn-outline-dark px-1 py-0">East</button> /
-        <button @click="move(0,-grid)()" class="btn btn-sm btn-outline-dark px-1 py-0">West</button>
-      </div>
       <AerialView
         :lat="goalLatLong[0]"
         :long="goalLatLong[1]"
@@ -89,13 +82,21 @@ export default {
           You're there! Great job!
           <div class="firework"></div>
         </div>
-        <button
-          v-else
-          @click="updateHere"
-          class="btn btn-outline-dark"
-        >
-          Am I there yet?
-        </button>
+        <div v-else>
+          <button
+            @click="updateHere"
+            class="btn btn-outline-dark"
+          >
+            Am I there yet?
+          </button>
+          <div class="pb-3">
+            ... or bump the goal farther:
+            <button @click="move(grid,0)()" class="btn btn-sm btn-outline-dark px-1 py-0">North</button> /
+            <button @click="move(-grid,0)()" class="btn btn-sm btn-outline-dark px-1 py-0">South</button> /
+            <button @click="move(0,grid)()" class="btn btn-sm btn-outline-dark px-1 py-0">East</button> /
+            <button @click="move(0,-grid)()" class="btn btn-sm btn-outline-dark px-1 py-0">West</button>
+          </div>
+        </div>
       </div>
       <table class="table table-bordered">
         <tbody>
