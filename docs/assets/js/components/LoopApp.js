@@ -49,10 +49,14 @@ export default {
     async updateHere() {
       this.hereLatLong = await getLatLong();
       const attemptsCount = this.attempts.length;
+      if (this.attempts.length) console.log(`${this.distance} < ${this.attempts[0].distance}?`)
       this.attempts.unshift({
         count: attemptsCount,
         distance: this.distance,
-        direction: this.direction
+        direction: this.direction,
+        temperature: this.attempts.length
+          ? (Number(this.distance) < Number(this.attempts[0].distance) ? '🔥 warmer' : '🧊 cooler')
+          : ''
       });
     },
     move(dLat, dLong) {
@@ -79,7 +83,7 @@ export default {
       />
       <div>
         <div v-if="distance < radius">
-          You're there! Great job!
+          🎉 You're there! Great job! 🗺️
           <div class="firework"></div>
         </div>
         <div v-else>
@@ -90,7 +94,7 @@ export default {
             Am I there yet?
           </button>
           <div class="pb-3">
-            ... or bump the goal farther:
+            or move the goal:
             <button @click="move(grid,0)()" class="btn btn-sm btn-outline-dark px-1 py-0">North</button> /
             <button @click="move(-grid,0)()" class="btn btn-sm btn-outline-dark px-1 py-0">South</button> /
             <button @click="move(0,grid)()" class="btn btn-sm btn-outline-dark px-1 py-0">East</button> /
@@ -107,6 +111,7 @@ export default {
               </span>
             </td>
             <td>{{attempt.distance}} {{unit}} {{attempt.direction}}</td>
+            <td>{{attempt.temperature}}</td>
           </tr>
         </tbody>
       </table>
