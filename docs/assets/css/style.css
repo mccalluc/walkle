@@ -7,6 +7,10 @@ a {
 }
 
 
+.attempt:first-child {
+  font-weight: bold;
+}
+
 /* Copied with minimal tweaks from https://alvaromontoro.com/blog/68002/creating-a-firework-effect-with-css */
 @keyframes firework {
   0% {

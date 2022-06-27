@@ -48,7 +48,7 @@ export default {
   methods: {
     async updateHere() {
       this.hereLatLong = await getLatLong();
-      const attemptsCount = this.attempts.length + 1;
+      const attemptsCount = this.attempts.length;
       this.attempts.unshift({
         count: attemptsCount,
         distance: this.distance,
@@ -100,8 +100,12 @@ export default {
       </div>
       <table class="table table-bordered">
         <tbody>
-          <tr v-for="attempt in attempts">
-            <td>#{{attempt.count}}</td>
+          <tr v-for="attempt in attempts" class="attempt">
+            <td>
+              <span v-if="attempt.count">
+                #{{attempt.count}}
+              </span>
+            </td>
             <td>{{attempt.distance}} {{unit}} {{attempt.direction}}</td>
           </tr>
         </tbody>
