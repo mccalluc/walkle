@@ -103,7 +103,7 @@ export default {
           </tr>
         </tbody>
       </table>
-      <div>
+      <div class="mb-3">
         Move the goal:
         <button @click="move(grid,0)()" class="btn btn-sm btn-outline-dark px-1 py-0">North</button> /
         <button @click="move(-grid,0)()" class="btn btn-sm btn-outline-dark px-1 py-0">South</button> /
@@ -111,7 +111,7 @@ export default {
         <button @click="move(0,-grid)()" class="btn btn-sm btn-outline-dark px-1 py-0">West</button>
       </div>
       <details>
-        <summary>🗺️ Hint...</summary>
+        <summary class="btn btn-sm btn-outline-dark px-1 mb-3">🗺️ Hint...</summary>
         <AerialView
           :lat="goalLatLong[0]"
           :long="goalLatLong[1]"
