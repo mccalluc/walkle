@@ -76,12 +76,7 @@ export default {
   },
   template: `
     <div>
-      <AerialView
-        :lat="goalLatLong[0]"
-        :long="goalLatLong[1]"
-        :mapStyle="mapStyle"
-      />
-      <div>
+      <div class="pb-3">
         <div v-if="distance < radius">
           🎉 You're there! Great job! 🗺️
           <div class="firework"></div>
@@ -93,13 +88,6 @@ export default {
           >
             Am I there yet?
           </button>
-          <div class="pb-3">
-            or move the goal:
-            <button @click="move(grid,0)()" class="btn btn-sm btn-outline-dark px-1 py-0">North</button> /
-            <button @click="move(-grid,0)()" class="btn btn-sm btn-outline-dark px-1 py-0">South</button> /
-            <button @click="move(0,grid)()" class="btn btn-sm btn-outline-dark px-1 py-0">East</button> /
-            <button @click="move(0,-grid)()" class="btn btn-sm btn-outline-dark px-1 py-0">West</button>
-          </div>
         </div>
       </div>
       <table class="table table-bordered">
@@ -115,6 +103,20 @@ export default {
           </tr>
         </tbody>
       </table>
+      <div>
+        Move the goal:
+        <button @click="move(grid,0)()" class="btn btn-sm btn-outline-dark px-1 py-0">North</button> /
+        <button @click="move(-grid,0)()" class="btn btn-sm btn-outline-dark px-1 py-0">South</button> /
+        <button @click="move(0,grid)()" class="btn btn-sm btn-outline-dark px-1 py-0">East</button> /
+        <button @click="move(0,-grid)()" class="btn btn-sm btn-outline-dark px-1 py-0">West</button>
+      </div>
+      <details>
+        <summary>🗺️ Hint...</summary>
+        <AerialView
+          :lat="goalLatLong[0]"
+          :long="goalLatLong[1]"
+        />
+      </details>
     </div>
   `
 }
