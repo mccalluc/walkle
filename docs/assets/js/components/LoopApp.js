@@ -3,6 +3,7 @@ import {KM, MILE} from "../units.js";
 import getLatLong from "../getLatLong.js";
 
 import AerialView from "./AerialView.js";
+import CountDownTillNext from "./CountDownTillNext.js";
 
 
 function ll(latLong) {
@@ -23,6 +24,7 @@ export default {
       mapStyle: params.mapStyle,
       hereLatLong: [undefined, undefined],
       attempts: [],
+      KM, MILE,
     }
   },
   computed: {
@@ -80,13 +82,18 @@ export default {
   },
   components: {
     AerialView,
+    CountDownTillNext,
   },
   template: `
     <div>
       <div class="pb-3">
-        <div v-if="distance < radius">
-          🎉 You're there! Great job! 🗺️
+        <div v-if="distance < radius || attempts.length > 5">
+          🎉 You're there! Great job!
           <div class="firework"></div>
+          <CountDownTillNext
+            :startInSeconds="Math.floor(Date.now() / 1000)"
+            :freqInSeconds="60 * 60 * 24"
+          />
         </div>
         <div v-else>
           <button
@@ -119,7 +126,7 @@ export default {
           <button @click="move(0,-grid)()" class="btn btn-sm btn-outline-dark px-1 py-0">West</button>
         </span>
         <span v-else>
-          ... not allowed after start!
+          not allowed after start!
         </span>
       </div>
       <details>
@@ -128,6 +135,49 @@ export default {
           :lat="goalLatLong[0]"
           :long="goalLatLong[1]"
         />
+      </details>
+      <details>
+        <summary class="btn btn-sm btn-outline-dark px-1 mb-3">⚙️ Config...</summary>
+        <table class="table table-bordered">
+          <tbody>
+            <tr>
+              <td>unit</td>
+              <td>
+                <select v-model="unit">
+                  <option :value="MILE">{{MILE}}</option>
+                  <option :value="KM">{{KM}}</option>
+                </select>
+              </td>
+              <td><small>Preferred units?</small></td>
+            </tr>
+
+            <tr>
+              <td>grid</td>
+              <td>
+                <select v-model="grid">
+                  <option :value="8 / 60">8'</option>
+                  <option :value="4 / 60">4'</option>
+                  <option :value="2 / 60">2'</option>
+                  <option :value="1 / 60">1'</option>
+                </select>
+              </td>
+              <td><small>How far do you want to walk? (1' is about a mile.)</td>
+            </tr>
+
+            <tr>
+              <td>goal radius</td>
+              <td>
+                <select v-model="radius">
+                  <option :value="0.1">0.1 {{unit}}</option>
+                  <option :value="0.05">0.05 {{unit}}</option>
+                  <option :value="0.02">0.02 {{unit}}</option>
+                  <option :value="0.01">0.01 {{unit}}</option>
+                </select>
+              </td>
+              <td><small>How close to the goal is close enough?</small></td>
+            </tr>
+          </tbody>
+        </table>
       </details>
     </div>
   `
