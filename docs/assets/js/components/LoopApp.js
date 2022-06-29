@@ -46,30 +46,37 @@ export default {
     }
   },
   methods: {
-    async updateHere() {
+    async updateHere(addToAttempts = true) {
       this.hereLatLong = await getLatLong();
       const attemptsCount = this.attempts.length;
-      if (this.attempts.length) console.log(`${this.distance} < ${this.attempts[0].distance}?`)
-      this.attempts.unshift({
-        count: attemptsCount,
-        distance: this.distance,
-        direction: this.direction,
-        temperature: this.attempts.length
-          ? (Number(this.distance) < Number(this.attempts[0].distance) ? '🔥 warmer' : '🧊 cooler')
-          : ''
-      });
+
+      if (!addToAttempts) {
+        this.attempts[0] = {
+          distance: this.distance,
+          direction: this.direction
+        };
+      } else {
+        this.attempts.unshift({
+          count: attemptsCount,
+          distance: this.distance,
+          direction: this.direction,
+          temperature: this.attempts.length
+            ? (Number(this.distance) < Number(this.attempts[0].distance) ? '🔥 warmer' : '🧊 cooler')
+            : ''
+        });
+      }
     },
     move(dLat, dLong) {
       function callback() {
         const [lat, long] = this.goalLatLong;
         this.goalLatLong = [lat + dLat, long + dLong];
-        this.updateHere();
+        this.updateHere(false);
       }
       return callback.bind(this);
     }
   },
   created() {
-    this.updateHere();
+    this.updateHere(true);
   },
   components: {
     AerialView,
@@ -105,10 +112,15 @@ export default {
       </table>
       <div class="mb-3">
         Move the goal:
-        <button @click="move(grid,0)()" class="btn btn-sm btn-outline-dark px-1 py-0">North</button> /
-        <button @click="move(-grid,0)()" class="btn btn-sm btn-outline-dark px-1 py-0">South</button> /
-        <button @click="move(0,grid)()" class="btn btn-sm btn-outline-dark px-1 py-0">East</button> /
-        <button @click="move(0,-grid)()" class="btn btn-sm btn-outline-dark px-1 py-0">West</button>
+        <span v-if="attempts.length < 2">
+          <button @click="move(grid,0)()" class="btn btn-sm btn-outline-dark px-1 py-0">North</button> /
+          <button @click="move(-grid,0)()" class="btn btn-sm btn-outline-dark px-1 py-0">South</button> /
+          <button @click="move(0,grid)()" class="btn btn-sm btn-outline-dark px-1 py-0">East</button> /
+          <button @click="move(0,-grid)()" class="btn btn-sm btn-outline-dark px-1 py-0">West</button>
+        </span>
+        <span v-else>
+          ... not allowed after start!
+        </span>
       </div>
       <details>
         <summary class="btn btn-sm btn-outline-dark px-1 mb-3">🗺️ Hint...</summary>
