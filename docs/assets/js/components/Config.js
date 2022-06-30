@@ -12,9 +12,28 @@ export default {
         return this.unit
       },
       set(value) {
-        this.$emit('update:unit', value)
+        localStorage.unit = value;
+        this.$emit('update:unit', value);
       }
-    }
+    },
+    computedGrid: {
+      get() {
+        return this.grid
+      },
+      set(value) {
+        localStorage.grid = value;
+        this.$emit('update:grid', value);
+      }
+    },
+    computedRadius: {
+      get() {
+        return this.radius
+      },
+      set(value) {
+        localStorage.radius = value;
+        this.$emit('update:radius', value)
+      }
+    },
   },
   emits: ['update:unit', 'update:grid', 'update:radius'],
   data() {

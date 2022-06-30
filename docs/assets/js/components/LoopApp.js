@@ -19,10 +19,9 @@ export default {
     );
     return {
       goalLatLong: params.goal.split(',').map(l => Number(l)),
-      unit: params.unit,
-      grid: Number(params.grid),
-      radius: Number(params.radius),
-      mapStyle: params.mapStyle,
+      unit: localStorage.unit || KM,
+      grid: Number(localStorage.grid) || 1/60,
+      radius: Number(localStorage.radius) || 0.1,
       hereLatLong: [undefined, undefined],
       attempts: [],
       KM, MILE,
