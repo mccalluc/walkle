@@ -56,10 +56,7 @@ export default {
         <tr>
           <td>grid</td>
           <td>
-            <select
-              :value="grid"
-              @input="$emit('update:grid', +$event.target.value)"
-            >
+            <select v-model="computedGrid">
               <option :value="8 / 60">8'</option>
               <option :value="4 / 60">4'</option>
               <option :value="2 / 60">2'</option>
@@ -72,10 +69,7 @@ export default {
         <tr>
           <td>goal radius</td>
           <td>
-            <select
-              :value="radius"
-              @input="$emit('update:radius', +$event.target.value)"
-            >
+            <select v-model="computedRadius">
               <option :value="0.1">0.1 {{unit}}</option>
               <option :value="0.05">0.05 {{unit}}</option>
               <option :value="0.02">0.02 {{unit}}</option>

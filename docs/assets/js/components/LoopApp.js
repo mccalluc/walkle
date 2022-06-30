@@ -17,6 +17,7 @@ export default {
     const params = Object.fromEntries(
       new URLSearchParams(location.hash.slice(1))
     );
+    console.info('localStorage:', localStorage)
     return {
       goalLatLong: params.goal.split(',').map(l => Number(l)),
       unit: localStorage.unit || KM,
