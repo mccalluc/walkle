@@ -34,6 +34,13 @@ export default {
         [KM]: 1/1000
       }[this.unit]
     },
+    distanceInMeters() {
+      try {
+        return getDistance(ll(this.hereLatLong), ll(this.goalLatLong));
+      } catch {
+        return undefined;
+      }
+    },
     distance() {
       try {
         const distanceInMeters = getDistance(ll(this.hereLatLong), ll(this.goalLatLong));
@@ -42,9 +49,8 @@ export default {
         return undefined;
       }
     },
-    direction() {
-      const compassDirection = getCompassDirection(ll(this.hereLatLong), ll(this.goalLatLong));
-      return compassDirection;
+    compassDirection() {
+      return getCompassDirection(ll(this.hereLatLong), ll(this.goalLatLong));
     }
   },
   methods: {
@@ -54,16 +60,20 @@ export default {
 
       if (!addToAttempts) {
         this.attempts[0] = {
-          distance: this.distance,
-          direction: this.direction
+          distanceInMeters: this.distanceInMeters,
+          compassDirection: this.compassDirection
         };
       } else {
         this.attempts.unshift({
           count: attemptsCount,
-          distance: this.distance,
-          direction: this.direction,
+          distanceInMeters: this.distanceInMeters,
+          compassDirection: this.compassDirection,
           temperature: this.attempts.length
-            ? (Number(this.distance) < Number(this.attempts[0].distance) ? '🔥 warmer' : '🧊 cooler')
+            ? (
+              this.distanceInMeters < this.attempts[0].distanceInMeters
+                ? '🔥 warmer'
+                : '🧊 cooler'
+              )
             : ''
         });
       }
@@ -87,7 +97,7 @@ export default {
   template: `
     <div>
       <div class="pb-3">
-        <div v-if="distance < radius || attempts.length > 5">
+        <div v-if="distance < radius">
           🎉 You're there! Great job!
           <div class="firework"></div>
           <CountDownTillNext
@@ -112,7 +122,11 @@ export default {
                 #{{attempt.count}}
               </span>
             </td>
-            <td>{{attempt.distance}} {{unit}} {{attempt.direction}}</td>
+            <td>
+              {{(distanceInMeters * this.coversionFactor).toPrecision(2)}}
+              {{unit}}
+              {{attempt.compassDirection}}
+            </td>
             <td>{{attempt.temperature}}</td>
           </tr>
         </tbody>
