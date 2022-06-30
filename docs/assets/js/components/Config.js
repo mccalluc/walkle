@@ -6,6 +6,16 @@ export default {
     grid: Number,
     radius: Number,
   },
+  computed: {
+    computedUnit: {
+      get() {
+        return this.unit
+      },
+      set(value) {
+        this.$emit('update:unit', value)
+      }
+    }
+  },
   emits: ['update:unit', 'update:grid', 'update:radius'],
   data() {
     return {KM, MILE}
@@ -16,10 +26,7 @@ export default {
         <tr>
           <td>unit</td>
           <td>
-            <select
-              :value="unit"
-              @input="$emit('update:unit', $event.target.value)"
-            >
+            <select v-model="computedUnit">
               <option :value="MILE">{{MILE}}</option>
               <option :value="KM">{{KM}}</option>
             </select>
