@@ -4,6 +4,7 @@ import getLatLong from "../getLatLong.js";
 
 import AerialView from "./AerialView.js";
 import CountDownTillNext from "./CountDownTillNext.js";
+import Config from "./Config.js";
 
 
 function ll(latLong) {
@@ -93,6 +94,7 @@ export default {
   components: {
     AerialView,
     CountDownTillNext,
+    Config,
   },
   template: `
     <div>
@@ -152,46 +154,11 @@ export default {
       </details>
       <details>
         <summary class="btn btn-sm btn-outline-dark px-1 mb-3">⚙️ Config...</summary>
-        <table class="table table-bordered">
-          <tbody>
-            <tr>
-              <td>unit</td>
-              <td>
-                <select v-model="unit">
-                  <option :value="MILE">{{MILE}}</option>
-                  <option :value="KM">{{KM}}</option>
-                </select>
-              </td>
-              <td><small>Preferred units?</small></td>
-            </tr>
-
-            <tr>
-              <td>grid</td>
-              <td>
-                <select v-model="grid">
-                  <option :value="8 / 60">8'</option>
-                  <option :value="4 / 60">4'</option>
-                  <option :value="2 / 60">2'</option>
-                  <option :value="1 / 60">1'</option>
-                </select>
-              </td>
-              <td><small>How far do you want to walk? (1' is about a mile.)</td>
-            </tr>
-
-            <tr>
-              <td>goal radius</td>
-              <td>
-                <select v-model="radius">
-                  <option :value="0.1">0.1 {{unit}}</option>
-                  <option :value="0.05">0.05 {{unit}}</option>
-                  <option :value="0.02">0.02 {{unit}}</option>
-                  <option :value="0.01">0.01 {{unit}}</option>
-                </select>
-              </td>
-              <td><small>How close to the goal is close enough?</small></td>
-            </tr>
-          </tbody>
-        </table>
+        <Config
+          v-model:unit="unit"
+          v-model:grid="grid"
+          v-model:radius="radius"
+        />
       </details>
     </div>
   `
