@@ -16,12 +16,9 @@ layout: base
 {% endif %}
 
 <script type="module">
-  import InitApp from '{{ site.baseurl }}/assets/js/components/InitApp.js';
-  import LoopApp from '{{ site.baseurl }}/assets/js/components/LoopApp.js';
-
-  window.onhashchange = () => { location.reload(); }
+  import App from '{{ site.baseurl }}/assets/js/components/WalkleApp.js';
 
   Vue.createApp(
-    {components: { App: location.hash ? LoopApp : InitApp }}
+    {components: { App }}
   ).mount('#app-container');
 </script>

@@ -1,6 +1,13 @@
 function getGeolocationPromise() {
   return new Promise((resolve) => {
-    navigator.geolocation.getCurrentPosition(resolve);
+    navigator.geolocation.getCurrentPosition(
+      resolve,
+      (error) => {console.error(error)},
+      {
+        maximumAge: 0,
+        enableHighAccuracy: true,
+      }
+    );
   })
 }
 
