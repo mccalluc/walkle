@@ -3,7 +3,7 @@ import {KM, MILE} from "../units.js";
 import getLatLong from "../getLatLong.js";
 
 import AerialView from "./AerialView.js";
-import CountDownTillNext from "./CountDownTillNext.js";
+import CountdownTillNext from "./CountdownTillNext.js";
 import ConfigTable from "./ConfigTable.js";
 import AttemptsTable from "./AttemptsTable.js";
 
@@ -133,7 +133,7 @@ export default {
   },
   components: {
     AerialView,
-    CountDownTillNext,
+    CountdownTillNext,
     ConfigTable,
     AttemptsTable,
   },
@@ -143,7 +143,7 @@ export default {
         <div v-if="radiusInMeters > distanceInMeters">
           🎉 You're there! Great job!
           <div class="firework"></div>
-          <CountDownTillNext
+          <CountdownTillNext
             :startInSeconds="startInSeconds"
             :freqInSeconds="freqInSeconds"
           />
