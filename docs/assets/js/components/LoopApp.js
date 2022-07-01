@@ -29,7 +29,7 @@ export default {
     }
   },
   computed: {
-    coversionFactor() {
+    conversionFactor() {
       return {
         [MILE]: 1/1609,
         [KM]: 1/1000
@@ -45,10 +45,13 @@ export default {
     distance() {
       try {
         const distanceInMeters = getDistance(ll(this.hereLatLong), ll(this.goalLatLong));
-        return (distanceInMeters * this.coversionFactor).toPrecision(2);
+        return (distanceInMeters * this.conversionFactor).toPrecision(2);
       } catch {
         return undefined;
       }
+    },
+    radiusInMeters() {
+      return this.radius / this.conversionFactor;
     },
     compassDirection() {
       return getCompassDirection(ll(this.hereLatLong), ll(this.goalLatLong));
@@ -100,7 +103,7 @@ export default {
   template: `
     <div>
       <div class="pb-3">
-        <div v-if="distance < radius">
+        <div v-if="distanceInMeters < radiusInMeters">
           🎉 You're there! Great job!
           <div class="firework"></div>
           <CountDownTillNext

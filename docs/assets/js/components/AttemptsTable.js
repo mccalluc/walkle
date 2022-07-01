@@ -6,7 +6,7 @@ export default {
     unit: String,
   },
   computed: {
-    coversionFactor() {
+    conversionFactor() {
       return {
         [MILE]: 1/1609,
         [KM]: 1/1000
@@ -23,7 +23,7 @@ export default {
             </span>
           </td>
           <td>
-            {{(attempt.distanceInMeters * this.coversionFactor).toPrecision(2)}}
+            {{(attempt.distanceInMeters * this.conversionFactor).toPrecision(2)}}
             {{unit}}
             {{attempt.compassDirection}}
           </td>
