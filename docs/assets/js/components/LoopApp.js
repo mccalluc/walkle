@@ -4,7 +4,8 @@ import getLatLong from "../getLatLong.js";
 
 import AerialView from "./AerialView.js";
 import CountDownTillNext from "./CountDownTillNext.js";
-import Config from "./Config.js";
+import ConfigTable from "./ConfigTable.js";
+import AttemptsTable from "./AttemptsTable.js";
 
 
 function ll(latLong) {
@@ -17,7 +18,6 @@ export default {
     const params = Object.fromEntries(
       new URLSearchParams(location.hash.slice(1))
     );
-    console.info('localStorage:', localStorage)
     return {
       goalLatLong: params.goal.split(',').map(l => Number(l)),
       unit: localStorage.unit || KM,
@@ -94,7 +94,8 @@ export default {
   components: {
     AerialView,
     CountDownTillNext,
-    Config,
+    ConfigTable,
+    AttemptsTable,
   },
   template: `
     <div>
@@ -112,27 +113,11 @@ export default {
             @click="updateHere"
             class="btn btn-outline-dark"
           >
-            Am I there yet?
+            Are we there yet?
           </button>
         </div>
       </div>
-      <table class="table table-bordered">
-        <tbody>
-          <tr v-for="attempt in attempts" class="attempt">
-            <td>
-              <span v-if="attempt.count">
-                #{{attempt.count}}
-              </span>
-            </td>
-            <td>
-              {{(distanceInMeters * this.coversionFactor).toPrecision(2)}}
-              {{unit}}
-              {{attempt.compassDirection}}
-            </td>
-            <td>{{attempt.temperature}}</td>
-          </tr>
-        </tbody>
-      </table>
+      <AttemptsTable :attempts="attempts" :unit="unit" />
       <div class="mb-3">
         Move the goal:
         <span v-if="attempts.length < 2">
@@ -154,7 +139,7 @@ export default {
       </details>
       <details>
         <summary class="btn btn-sm btn-outline-dark px-1 mb-3">⚙️ Config...</summary>
-        <Config
+        <ConfigTable
           v-model:unit="unit"
           v-model:grid="grid"
           v-model:radius="radius"
