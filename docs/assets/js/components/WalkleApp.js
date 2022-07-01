@@ -1,4 +1,4 @@
-import {getDistance, getCompassDirection} from "../upstream.js";
+import {getDistance, getCompassDirection, md5} from "../upstream.js";
 import {KM, MILE} from "../units.js";
 import getLatLong from "../getLatLong.js";
 
@@ -13,18 +13,49 @@ function ll(latLong) {
   return {latitude, longitude};
 }
 
+async function getGoalLatLong({startInSeconds, freqInSeconds, grid}) {
+  const seed = Math.floor(startInSeconds / freqInSeconds);
+  const bytes = md5.array(String(seed));
+  const [dx, dy] = [
+    // between 0 and 1:
+    (bytes[0] + 256 * bytes[1]) / (256**2),
+    (bytes[2] + 256 * bytes[3]) / (256**2)
+  ]
+  const randomOffsetLatLong = [grid * dx, grid * dy];
+
+  const [lat, long] = await getLatLong();
+  const [gridLat, gridLong] = [
+    Math.floor(lat / grid) * grid,
+    Math.floor(long / grid) * grid,
+  ]
+  const [offsetLat, offsetLong] = randomOffsetLatLong;
+  return [
+    gridLat + offsetLat,
+    gridLong + offsetLong,
+  ]
+}
+
+const startInSeconds = Math.floor(Date.now() / 1000);
+const freqInSeconds = 60 * 60 * 24; // ie, daily
+
 export default {
   data() {
-    const params = Object.fromEntries(
-      new URLSearchParams(location.hash.slice(1))
-    );
     return {
-      goalLatLong: params.goal.split(',').map(l => Number(l)),
+      // User configurations:
       unit: localStorage.unit || KM,
       grid: Number(localStorage.grid) || 1/60,
       radius: Number(localStorage.radius) || 0.1,
+
+      // Where we are, and where we have been:
+      goalLatLong: [undefined, undefined],
       hereLatLong: [undefined, undefined],
       attempts: [],
+
+      // Time:
+      startInSeconds,
+      freqInSeconds,
+
+      // String constants, for consistency:
       KM, MILE,
     }
   },
@@ -54,7 +85,12 @@ export default {
       return this.radius / this.conversionFactor;
     },
     compassDirection() {
-      return getCompassDirection(ll(this.hereLatLong), ll(this.goalLatLong));
+      try {
+        return getCompassDirection(ll(this.hereLatLong), ll(this.goalLatLong));
+      } catch {
+        return undefined;
+      }
+      
     }
   },
   methods: {
@@ -91,7 +127,8 @@ export default {
       return callback.bind(this);
     }
   },
-  created() {
+  async created() {
+    this.goalLatLong = await getGoalLatLong({startInSeconds, freqInSeconds, grid: this.grid});
     this.updateHere(true);
   },
   components: {
@@ -103,12 +140,12 @@ export default {
   template: `
     <div>
       <div class="pb-3">
-        <div v-if="distanceInMeters < radiusInMeters">
+        <div v-if="radiusInMeters > distanceInMeters">
           🎉 You're there! Great job!
           <div class="firework"></div>
           <CountDownTillNext
-            :startInSeconds="Math.floor(Date.now() / 1000)"
-            :freqInSeconds="60 * 60 * 24"
+            :startInSeconds="startInSeconds"
+            :freqInSeconds="freqInSeconds"
           />
         </div>
         <div v-else>
