@@ -50,6 +50,7 @@ export default {
       goalLatLong: [undefined, undefined],
       hereLatLong: [undefined, undefined],
       attempts: [],
+      isGoalReached: false,
 
       // Time:
       startInSeconds,
@@ -60,9 +61,6 @@ export default {
     }
   },
   computed: {
-    isGoalReached() {
-      return this.radiusInMeters > this.distanceInMeters || this.attempts.length > 3;
-    },
     conversionFactor() {
       return {
         [MILE]: 1/1609,
@@ -109,7 +107,8 @@ export default {
           distanceInMeters: this.distanceInMeters,
         };
       } else {
-        if (this.isGoalReached) {
+        if (this.radiusInMeters > this.distanceInMeters) {
+          this.isGoalReached = true;
           this.attempts.unshift({
             isGoalReached: true,
             count: attemptsCount,
