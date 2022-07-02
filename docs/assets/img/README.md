@@ -1,0 +1,1 @@
+Favicon copied from https://en.wikipedia.org/wiki/Ampelm%C3%A4nnchen
