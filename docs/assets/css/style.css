@@ -1,3 +1,9 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@600&display=swap');
+#header {
+  font-family: 'Roboto Slab', serif;
+  text-align: center;
+}
+
 a {
   color: #555;
 }
