@@ -3,6 +3,8 @@ import CountdownTillNext from "./CountdownTillNext.js";
 export default {
   props: {
     attempts: Array,
+    startInSeconds: Number,
+    freqInSeconds: Number,
   },
   components: {
     CountdownTillNext,

@@ -161,7 +161,11 @@ export default {
           Are we there yet?
         </button>
       </div>
-      <AttemptsTable :attempts="attempts"/>
+      <AttemptsTable
+        :attempts="attempts"
+        :startInSeconds="startInSeconds"
+        :freqInSeconds="freqInSeconds"
+      />
       <div class="mb-3">
         Move the goal:
         <span v-if="attempts.length < 2">
