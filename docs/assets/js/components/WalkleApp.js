@@ -102,24 +102,23 @@ export default {
       } ${this.unit} ${this.compassDirection}`;
 
       if (!addToAttempts) {
-        console.log('no add to attempts');
         this.attempts[0] = {
           message: `Walk ${distanceDirection}`,
           distanceInMeters: this.distanceInMeters,
         };
       } else {
-        console.log('add to attempts');
+        let temperature = '';
+        const hasMoved = !this.attempts[0].message.includes(distanceDirection);
+        if (hasMoved) {
+          temperature = this.distanceInMeters < this.attempts[0].distanceInMeters
+            ? '🔥 warmer'
+            : '🧊 cooler';
+        }
         this.attempts.unshift({
-          message: `Now go ${distanceDirection}`,
+          message: `${hasMoved ? 'Now go' : 'Still'} ${distanceDirection}`,
           count: attemptsCount,
           distanceInMeters: this.distanceInMeters,
-          temperature: this.attempts.length
-            ? (
-              this.distanceInMeters < this.attempts[0].distanceInMeters
-                ? '🔥 warmer'
-                : '🧊 cooler'
-              )
-            : ''
+          temperature
         });
       }
     },
