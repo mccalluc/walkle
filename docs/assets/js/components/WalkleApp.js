@@ -4,9 +4,9 @@ import getLatLong from "../getLatLong.js";
 
 import AerialView from "./AerialView.js";
 import CountdownTillNext from "./CountdownTillNext.js";
-import ConfigTable from "./ConfigTable.js";
+import SettingsTable from "./SettingsTable.js";
 import AttemptsTable from "./AttemptsTable.js";
-
+import HelpInfo from "./HelpInfo.js";
 
 function ll(latLong) {
   const [latitude, longitude] = latLong;
@@ -134,8 +134,9 @@ export default {
   components: {
     AerialView,
     CountdownTillNext,
-    ConfigTable,
+    SettingsTable,
     AttemptsTable,
+    HelpInfo,
   },
   template: `
     <div>
@@ -178,12 +179,16 @@ export default {
         />
       </details>
       <details>
-        <summary class="btn btn-sm btn-outline-dark px-1 mb-3">⚙️ Config...</summary>
-        <ConfigTable
+        <summary class="btn btn-sm btn-outline-dark px-1 mb-3">⚙️ Settings...</summary>
+        <SettingsTable
           v-model:unit="unit"
           v-model:grid="grid"
           v-model:radius="radius"
         />
+      </details>
+      <details>
+        <summary class="btn btn-sm btn-outline-dark px-1 mb-3">ℹ️ Help...</summary>
+        <HelpInfo />
       </details>
     </div>
   `
