@@ -7,6 +7,7 @@ import CountdownTillNext from "./CountdownTillNext.js";
 import SettingsTable from "./SettingsTable.js";
 import AttemptsTable from "./AttemptsTable.js";
 import HelpInfo from "./HelpInfo.js";
+import FoldDown from "./FoldDown.js";
 
 function ll(latLong) {
   const [latitude, longitude] = latLong;
@@ -137,6 +138,7 @@ export default {
     SettingsTable,
     AttemptsTable,
     HelpInfo,
+    FoldDown,
   },
   template: `
     <div>
@@ -171,25 +173,23 @@ export default {
           not allowed after start!
         </span>
       </div>
-      <details>
-        <summary class="btn btn-sm btn-outline-dark px-1 mb-3">🗺️ Hint...</summary>
+
+      <FoldDown label="🗺️ Hint...">
         <AerialView
           :lat="goalLatLong[0]"
           :long="goalLatLong[1]"
         />
-      </details>
-      <details>
-        <summary class="btn btn-sm btn-outline-dark px-1 mb-3">⚙️ Settings...</summary>
+      </FoldDown>
+      <FoldDown label="⚙️ Settings...">
         <SettingsTable
           v-model:unit="unit"
           v-model:grid="grid"
           v-model:radius="radius"
         />
-      </details>
-      <details>
-        <summary class="btn btn-sm btn-outline-dark px-1 mb-3">ℹ️ Help...</summary>
+      </FoldDown>
+      <FoldDown label="ℹ️ Help...">
         <HelpInfo />
-      </details>
+      </FoldDown>
     </div>
   `
 }
