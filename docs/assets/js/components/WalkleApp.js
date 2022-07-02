@@ -3,7 +3,6 @@ import {KM, MILE} from "../units.js";
 import getLatLong from "../getLatLong.js";
 
 import AerialView from "./AerialView.js";
-import CountdownTillNext from "./CountdownTillNext.js";
 import SettingsTable from "./SettingsTable.js";
 import AttemptsTable from "./AttemptsTable.js";
 import HelpInfo from "./HelpInfo.js";
@@ -61,6 +60,9 @@ export default {
     }
   },
   computed: {
+    isGoalReached() {
+      return this.radiusInMeters > this.distanceInMeters || this.attempts.length > 3;
+    },
     conversionFactor() {
       return {
         [MILE]: 1/1609,
@@ -107,19 +109,26 @@ export default {
           distanceInMeters: this.distanceInMeters,
         };
       } else {
-        let temperature = '';
-        const hasMoved = !this.attempts[0].message.includes(distanceDirection);
-        if (hasMoved) {
-          temperature = this.distanceInMeters < this.attempts[0].distanceInMeters
-            ? '🔥 warmer'
-            : '🧊 cooler';
+        if (this.isGoalReached) {
+          this.attempts.unshift({
+            isGoalReached: true,
+            count: attemptsCount,
+          });
+        } else {
+          let temperature = '';
+          const hasMoved = !this.attempts[0].message.includes(distanceDirection);
+          if (hasMoved) {
+            temperature = this.distanceInMeters < this.attempts[0].distanceInMeters
+              ? '🔥 warmer'
+              : '🧊 cooler';
+          }
+          this.attempts.unshift({
+            message: `${hasMoved ? 'Now go' : 'Still'} ${distanceDirection}`,
+            count: attemptsCount,
+            distanceInMeters: this.distanceInMeters,
+            temperature
+          });
         }
-        this.attempts.unshift({
-          message: `${hasMoved ? 'Now go' : 'Still'} ${distanceDirection}`,
-          count: attemptsCount,
-          distanceInMeters: this.distanceInMeters,
-          temperature
-        });
       }
     },
     move(dLat, dLong) {
@@ -137,7 +146,6 @@ export default {
   },
   components: {
     AerialView,
-    CountdownTillNext,
     SettingsTable,
     AttemptsTable,
     HelpInfo,
@@ -146,22 +154,13 @@ export default {
   template: `
     <div>
       <div class="pb-3">
-        <div v-if="radiusInMeters > distanceInMeters">
-          🎉 You're there! Great job!
-          <div class="firework"></div>
-          <CountdownTillNext
-            :startInSeconds="startInSeconds"
-            :freqInSeconds="freqInSeconds"
-          />
-        </div>
-        <div v-else>
-          <button
-            @click="updateHere"
-            class="btn btn-outline-dark"
-          >
-            Are we there yet?
-          </button>
-        </div>
+        <button
+          @click="updateHere"
+          class="btn btn-outline-dark"
+          :disabled="isGoalReached"
+        >
+          Are we there yet?
+        </button>
       </div>
       <AttemptsTable :attempts="attempts"/>
       <div class="mb-3">
