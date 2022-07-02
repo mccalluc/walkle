@@ -3,10 +3,10 @@ import {KM, MILE} from "../units.js";
 import getLatLong from "../getLatLong.js";
 
 import AerialView from "./AerialView.js";
-import CountdownTillNext from "./CountdownTillNext.js";
-import ConfigTable from "./ConfigTable.js";
+import SettingsTable from "./SettingsTable.js";
 import AttemptsTable from "./AttemptsTable.js";
-
+import HelpInfo from "./HelpInfo.js";
+import FoldDown from "./FoldDown.js";
 
 function ll(latLong) {
   const [latitude, longitude] = latLong;
@@ -50,6 +50,7 @@ export default {
       goalLatLong: [undefined, undefined],
       hereLatLong: [undefined, undefined],
       attempts: [],
+      isGoalReached: false,
 
       // Time:
       startInSeconds,
@@ -90,32 +91,43 @@ export default {
       } catch {
         return undefined;
       }
-      
-    }
+    },
   },
   methods: {
     async updateHere(addToAttempts = true) {
       this.hereLatLong = await getLatLong();
       const attemptsCount = this.attempts.length;
+      const distanceDirection = `${
+        (this.distanceInMeters * this.conversionFactor).toPrecision(2)
+      } ${this.unit} ${this.compassDirection}`;
 
       if (!addToAttempts) {
         this.attempts[0] = {
+          message: `Walk ${distanceDirection}`,
           distanceInMeters: this.distanceInMeters,
-          compassDirection: this.compassDirection
         };
       } else {
-        this.attempts.unshift({
-          count: attemptsCount,
-          distanceInMeters: this.distanceInMeters,
-          compassDirection: this.compassDirection,
-          temperature: this.attempts.length
-            ? (
-              this.distanceInMeters < this.attempts[0].distanceInMeters
-                ? '🔥 warmer'
-                : '🧊 cooler'
-              )
-            : ''
-        });
+        if (this.radiusInMeters > this.distanceInMeters) {
+          this.isGoalReached = true;
+          this.attempts.unshift({
+            isGoalReached: true,
+            count: attemptsCount,
+          });
+        } else {
+          let temperature = '';
+          const hasMoved = !this.attempts[0].message.includes(distanceDirection);
+          if (hasMoved) {
+            temperature = this.distanceInMeters < this.attempts[0].distanceInMeters
+              ? '🔥 warmer'
+              : '🧊 cooler';
+          }
+          this.attempts.unshift({
+            message: `${hasMoved ? 'Now go' : 'Still'} ${distanceDirection}`,
+            count: attemptsCount,
+            distanceInMeters: this.distanceInMeters,
+            temperature
+          });
+        }
       }
     },
     move(dLat, dLong) {
@@ -129,35 +141,31 @@ export default {
   },
   async created() {
     this.goalLatLong = await getGoalLatLong({startInSeconds, freqInSeconds, grid: this.grid});
-    this.updateHere(true);
+    this.updateHere(false);
   },
   components: {
     AerialView,
-    CountdownTillNext,
-    ConfigTable,
+    SettingsTable,
     AttemptsTable,
+    HelpInfo,
+    FoldDown,
   },
   template: `
     <div>
       <div class="pb-3">
-        <div v-if="radiusInMeters > distanceInMeters">
-          🎉 You're there! Great job!
-          <div class="firework"></div>
-          <CountdownTillNext
-            :startInSeconds="startInSeconds"
-            :freqInSeconds="freqInSeconds"
-          />
-        </div>
-        <div v-else>
-          <button
-            @click="updateHere"
-            class="btn btn-outline-dark"
-          >
-            Are we there yet?
-          </button>
-        </div>
+        <button
+          @click="updateHere"
+          class="btn btn-outline-dark"
+          :disabled="isGoalReached"
+        >
+          Are we there yet?
+        </button>
       </div>
-      <AttemptsTable :attempts="attempts" :unit="unit" />
+      <AttemptsTable
+        :attempts="attempts"
+        :startInSeconds="startInSeconds"
+        :freqInSeconds="freqInSeconds"
+      />
       <div class="mb-3">
         Move the goal:
         <span v-if="attempts.length < 2">
@@ -170,21 +178,23 @@ export default {
           not allowed after start!
         </span>
       </div>
-      <details>
-        <summary class="btn btn-sm btn-outline-dark px-1 mb-3">🗺️ Hint...</summary>
+
+      <FoldDown label="🗺️ Hint...">
         <AerialView
           :lat="goalLatLong[0]"
           :long="goalLatLong[1]"
         />
-      </details>
-      <details>
-        <summary class="btn btn-sm btn-outline-dark px-1 mb-3">⚙️ Config...</summary>
-        <ConfigTable
+      </FoldDown>
+      <FoldDown label="⚙️ Settings...">
+        <SettingsTable
           v-model:unit="unit"
           v-model:grid="grid"
           v-model:radius="radius"
         />
-      </details>
+      </FoldDown>
+      <FoldDown label="ℹ️ Help...">
+        <HelpInfo />
+      </FoldDown>
     </div>
   `
 }

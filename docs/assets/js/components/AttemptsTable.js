@@ -1,17 +1,13 @@
-import {KM, MILE} from "../units.js";
+import CountdownTillNext from "./CountdownTillNext.js";
 
 export default {
   props: {
     attempts: Array,
-    unit: String,
+    startInSeconds: Number,
+    freqInSeconds: Number,
   },
-  computed: {
-    conversionFactor() {
-      return {
-        [MILE]: 1/1609,
-        [KM]: 1/1000
-      }[this.unit]
-    },
+  components: {
+    CountdownTillNext,
   },
   template: `
     <table class="table table-bordered">
@@ -23,9 +19,17 @@ export default {
             </span>
           </td>
           <td>
-            {{(attempt.distanceInMeters * this.conversionFactor).toPrecision(2)}}
-            {{unit}}
-            {{attempt.compassDirection}}
+            <span v-if="attempt.isGoalReached">
+              🎉 You're there! Great job!
+              <div class="firework"></div>
+              <CountdownTillNext
+                :startInSeconds="startInSeconds"
+                :freqInSeconds="freqInSeconds"
+              />
+            </span>
+            <span v-else>
+              {{attempt.message}}
+            </span>
           </td>
           <td>{{attempt.temperature}}</td>
         </tr>

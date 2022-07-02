@@ -1,5 +1,5 @@
 ---
-title: walkle
+title: Walkle
 layout: home
 ---
 
