@@ -1,17 +1,6 @@
-import {KM, MILE} from "../units.js";
-
 export default {
   props: {
     attempts: Array,
-    unit: String,
-  },
-  computed: {
-    conversionFactor() {
-      return {
-        [MILE]: 1/1609,
-        [KM]: 1/1000
-      }[this.unit]
-    },
   },
   template: `
     <table class="table table-bordered">
@@ -22,11 +11,7 @@ export default {
               #{{attempt.count}}
             </span>
           </td>
-          <td>
-            {{(attempt.distanceInMeters * this.conversionFactor).toPrecision(2)}}
-            {{unit}}
-            {{attempt.compassDirection}}
-          </td>
+          <td>{{attempt.message}}</td>
           <td>{{attempt.temperature}}</td>
         </tr>
       </tbody>

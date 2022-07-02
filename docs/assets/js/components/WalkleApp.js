@@ -91,24 +91,28 @@ export default {
       } catch {
         return undefined;
       }
-      
-    }
+    },
   },
   methods: {
     async updateHere(addToAttempts = true) {
       this.hereLatLong = await getLatLong();
       const attemptsCount = this.attempts.length;
+      const distanceDirection = `${
+        (this.distanceInMeters * this.conversionFactor).toPrecision(2)
+      } ${this.unit} ${this.compassDirection}`;
 
       if (!addToAttempts) {
+        console.log('no add to attempts');
         this.attempts[0] = {
+          message: `Walk ${distanceDirection}`,
           distanceInMeters: this.distanceInMeters,
-          compassDirection: this.compassDirection
         };
       } else {
+        console.log('add to attempts');
         this.attempts.unshift({
+          message: `Now go ${distanceDirection}`,
           count: attemptsCount,
           distanceInMeters: this.distanceInMeters,
-          compassDirection: this.compassDirection,
           temperature: this.attempts.length
             ? (
               this.distanceInMeters < this.attempts[0].distanceInMeters
@@ -130,7 +134,7 @@ export default {
   },
   async created() {
     this.goalLatLong = await getGoalLatLong({startInSeconds, freqInSeconds, grid: this.grid});
-    this.updateHere(true);
+    this.updateHere(false);
   },
   components: {
     AerialView,
@@ -160,7 +164,7 @@ export default {
           </button>
         </div>
       </div>
-      <AttemptsTable :attempts="attempts" :unit="unit" />
+      <AttemptsTable :attempts="attempts"/>
       <div class="mb-3">
         Move the goal:
         <span v-if="attempts.length < 2">
