@@ -18,12 +18,14 @@ export default {
     },
   },
   template: `
-    <iframe
-      :width="width"
-      :height="height"
-      frameborder="0"
-      :src="src">
-    </iframe>
+    <p>
+      <iframe
+        :width="width"
+        :height="height"
+        frameborder="0"
+        :src="src">
+      </iframe>
+    </p>
   `
 }
 
