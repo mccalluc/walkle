@@ -143,6 +143,11 @@ export default {
         this.updateHere(false);
       }
       return callback.bind(this);
+    },
+    restart() {
+      localStorage.removeItem('attempts');
+      localStorage.removeItem('goalLatLong');
+      document.location.reload();
     }
   },
   async created() {
@@ -191,6 +196,16 @@ export default {
         </span>
       </div>
 
+      <FoldDown label="👟 New...">
+        <p>
+          Are you sure you want to clear and restart?
+          <button 
+            @click="restart()"
+            class="btn btn-sm btn-outline-dark px-1 py-0">
+            Yes!
+          </button>
+        </p>
+      </FoldDown>
       <FoldDown label="🗺️ Hint...">
         <AerialView
           :lat="goalLatLong[0]"
