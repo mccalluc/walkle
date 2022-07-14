@@ -199,10 +199,12 @@ export default {
         </p>
       </FoldDown>
       <FoldDown label="🗺️ Hint...">
-        <AerialView
-          :lat="goalLatLong[0]"
-          :long="goalLatLong[1]"
-        />
+        <p v-if="goalLatLong">
+          <AerialView
+            :lat="goalLatLong[0]"
+            :long="goalLatLong[1]"
+          />
+        </p>
       </FoldDown>
       <FoldDown label="⚙️ Settings...">
         <SettingsTable
