@@ -1,3 +1,4 @@
+import NewWalkle from "./NewWalkle.js";
 
 export default {
   props: {
@@ -26,11 +27,16 @@ export default {
       return date.toISOString().substring(11, 19)
     }
   },
+  components: {
+    NewWalkle,
+  },
   template: `
     <div>
       ⏰ Next Walkle in: 
       <span v-if="remainingSeconds >= 0">{{remainingFormatted}}</span>
-      <a href="/walkle/" v-else>now!</a>
+      <span v-else>
+        <NewWalkle />
+      </span>
     </div>
   `
 }

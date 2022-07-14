@@ -7,6 +7,7 @@ import SettingsTable from "./SettingsTable.js";
 import AttemptsTable from "./AttemptsTable.js";
 import HelpInfo from "./HelpInfo.js";
 import FoldDown from "./FoldDown.js";
+import NewWalkle from "./NewWalkle.js";
 
 function ll(latLong) {
   const [latitude, longitude] = latLong;
@@ -158,6 +159,7 @@ export default {
     AttemptsTable,
     HelpInfo,
     FoldDown,
+    NewWalkle,
   },
   template: `
     <div>
@@ -191,11 +193,7 @@ export default {
       <FoldDown label="👟 New...">
         <p>
           Are you sure you want to clear and restart?
-          <button 
-            @click="restart()"
-            class="btn btn-sm btn-outline-dark px-1 py-0">
-            Yes!
-          </button>
+          <NewWalkle />
         </p>
       </FoldDown>
       <FoldDown label="🗺️ Hint...">
