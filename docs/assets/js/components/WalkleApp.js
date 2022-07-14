@@ -47,9 +47,9 @@ export default {
       radius: Number(localStorage.radius) || 0.1,
 
       // Where we are, and where we have been:
-      goalLatLong: [undefined, undefined],
-      hereLatLong: [undefined, undefined],
-      attempts: [],
+      goalLatLong: JSON.parse(localStorage.goalLatLong || 'null'),
+      hereLatLong: [null, null],
+      attempts: JSON.parse(localStorage.attempts || '[]'),
       isGoalReached: false,
 
       // Time:
@@ -129,19 +129,31 @@ export default {
           });
         }
       }
+
+      localStorage.setItem('attempts', JSON.stringify(this.attempts))
+    },
+    setGoalLatLong(pair) {
+      this.goalLatLong = pair;
+      localStorage.setItem('goalLatLong', JSON.stringify(pair));
     },
     move(dLat, dLong) {
       function callback() {
         const [lat, long] = this.goalLatLong;
-        this.goalLatLong = [lat + dLat, long + dLong];
+        this.setGoalLatLong([lat + dLat, long + dLong]);
         this.updateHere(false);
       }
       return callback.bind(this);
     }
   },
   async created() {
-    this.goalLatLong = await getGoalLatLong({startInSeconds, freqInSeconds, grid: this.grid});
-    this.updateHere(false);
+    if (! this.goalLatLong) {
+      this.setGoalLatLong(await getGoalLatLong({startInSeconds, freqInSeconds, grid: this.grid}));
+      this.updateHere(false);
+    } else {
+      // Reloading an in-progress walk:
+      // We don't need to update the table, but we do need to figure out where we are.
+      this.hereLatLong = await getLatLong();
+    }
   },
   components: {
     AerialView,
