@@ -69,15 +69,7 @@ export default {
     },
     distanceInMeters() {
       try {
-        return getDistance(ll(this.hereLatLong), ll(this.goalLatLong));
-      } catch {
-        return undefined;
-      }
-    },
-    distance() {
-      try {
-        const distanceInMeters = getDistance(ll(this.hereLatLong), ll(this.goalLatLong));
-        return (distanceInMeters * this.conversionFactor).toPrecision(2);
+        return getDistance(ll(this.hereLatLong), ll(this.goalLatLong)) - this.radiusInMeters;
       } catch {
         return undefined;
       }
