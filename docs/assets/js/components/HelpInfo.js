@@ -16,7 +16,11 @@ export default {
         If travel in your area is constrained in certain directions
         (oceans, highways, dragons, ...), you can pick a goal farther
         north/east/south/west.
-      </p> 
+      </p>
+
+      <p>
+        <a href="https://github.com/mccalluc">Source code on github.</a>
+      </p>
     </div>
   `
 }

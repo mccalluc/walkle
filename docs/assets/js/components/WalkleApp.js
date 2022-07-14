@@ -7,6 +7,7 @@ import SettingsTable from "./SettingsTable.js";
 import AttemptsTable from "./AttemptsTable.js";
 import HelpInfo from "./HelpInfo.js";
 import FoldDown from "./FoldDown.js";
+import NewWalkle from "./NewWalkle.js";
 
 function ll(latLong) {
   const [latitude, longitude] = latLong;
@@ -47,9 +48,9 @@ export default {
       radius: Number(localStorage.radius) || 0.1,
 
       // Where we are, and where we have been:
-      goalLatLong: [undefined, undefined],
-      hereLatLong: [undefined, undefined],
-      attempts: [],
+      goalLatLong: JSON.parse(localStorage.goalLatLong || 'null'),
+      hereLatLong: [null, null],
+      attempts: JSON.parse(localStorage.attempts || '[]'),
       isGoalReached: false,
 
       // Time:
@@ -69,15 +70,7 @@ export default {
     },
     distanceInMeters() {
       try {
-        return getDistance(ll(this.hereLatLong), ll(this.goalLatLong));
-      } catch {
-        return undefined;
-      }
-    },
-    distance() {
-      try {
-        const distanceInMeters = getDistance(ll(this.hereLatLong), ll(this.goalLatLong));
-        return (distanceInMeters * this.conversionFactor).toPrecision(2);
+        return getDistance(ll(this.hereLatLong), ll(this.goalLatLong)) - this.radiusInMeters;
       } catch {
         return undefined;
       }
@@ -129,19 +122,36 @@ export default {
           });
         }
       }
+
+      localStorage.setItem('attempts', JSON.stringify(this.attempts))
+    },
+    setGoalLatLong(pair) {
+      this.goalLatLong = pair;
+      localStorage.setItem('goalLatLong', JSON.stringify(pair));
     },
     move(dLat, dLong) {
       function callback() {
         const [lat, long] = this.goalLatLong;
-        this.goalLatLong = [lat + dLat, long + dLong];
+        this.setGoalLatLong([lat + dLat, long + dLong]);
         this.updateHere(false);
       }
       return callback.bind(this);
+    },
+    restart() {
+      localStorage.removeItem('attempts');
+      localStorage.removeItem('goalLatLong');
+      document.location.reload();
     }
   },
   async created() {
-    this.goalLatLong = await getGoalLatLong({startInSeconds, freqInSeconds, grid: this.grid});
-    this.updateHere(false);
+    if (! this.goalLatLong) {
+      this.setGoalLatLong(await getGoalLatLong({startInSeconds, freqInSeconds, grid: this.grid}));
+      this.updateHere(false);
+    } else {
+      // Reloading an in-progress walk:
+      // We don't need to update the table, but we do need to figure out where we are.
+      this.hereLatLong = await getLatLong();
+    }
   },
   components: {
     AerialView,
@@ -149,6 +159,7 @@ export default {
     AttemptsTable,
     HelpInfo,
     FoldDown,
+    NewWalkle,
   },
   template: `
     <div>
@@ -179,11 +190,19 @@ export default {
         </span>
       </div>
 
+      <FoldDown label="👟 New...">
+        <p>
+          Are you sure you want to clear and restart?
+          <NewWalkle />
+        </p>
+      </FoldDown>
       <FoldDown label="🗺️ Hint...">
-        <AerialView
-          :lat="goalLatLong[0]"
-          :long="goalLatLong[1]"
-        />
+        <p v-if="goalLatLong">
+          <AerialView
+            :lat="goalLatLong[0]"
+            :long="goalLatLong[1]"
+          />
+        </p>
       </FoldDown>
       <FoldDown label="⚙️ Settings...">
         <SettingsTable
