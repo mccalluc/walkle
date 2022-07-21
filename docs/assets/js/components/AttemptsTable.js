@@ -10,6 +10,9 @@ export default {
     CountdownTillNext,
   },
   template: `
+    <p v-if="!attempts.length">
+      Loading...
+    </p>
     <table class="table table-bordered">
       <tbody>
         <tr v-for="attempt in attempts" class="attempt">
