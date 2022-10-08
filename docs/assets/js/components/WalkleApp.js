@@ -53,6 +53,9 @@ export default {
       attempts: JSON.parse(localStorage.attempts || '[]'),
       isGoalReached: false,
 
+      // ... or an error message:
+      message: null,
+
       // Time:
       startInSeconds,
       freqInSeconds,
@@ -129,6 +132,9 @@ export default {
       this.goalLatLong = pair;
       localStorage.setItem('goalLatLong', JSON.stringify(pair));
     },
+    setMessage(message) {
+      this.message = message;
+    },
     move(dLat, dLong) {
       function callback() {
         const [lat, long] = this.goalLatLong;
@@ -145,8 +151,13 @@ export default {
   },
   async created() {
     if (! this.goalLatLong) {
-      this.setGoalLatLong(await getGoalLatLong({startInSeconds, freqInSeconds, grid: this.grid}));
-      this.updateHere(false);
+      try {
+        this.setGoalLatLong(await getGoalLatLong({startInSeconds, freqInSeconds, grid: this.grid}));
+        this.updateHere(false);
+      } catch (error) {
+        // TODO: Handle different cases.
+        this.setMessage('Error!');
+      }
     } else {
       // Reloading an in-progress walk:
       // We don't need to update the table, but we do need to figure out where we are.
@@ -163,31 +174,36 @@ export default {
   },
   template: `
     <div>
-      <div class="pb-3">
-        <button
-          @click="updateHere"
-          class="btn btn-outline-dark"
-          :disabled="isGoalReached"
-        >
-          Are we there yet?
-        </button>
+      <div v-if="message">
+        TODO: Message here
       </div>
-      <AttemptsTable
-        :attempts="attempts"
-        :startInSeconds="startInSeconds"
-        :freqInSeconds="freqInSeconds"
-      />
-      <div class="mb-3">
-        Move the goal:
-        <span v-if="attempts.length < 2">
-          <button @click="move(grid,0)()" class="btn btn-sm btn-outline-dark px-1 py-0">North</button> /
-          <button @click="move(-grid,0)()" class="btn btn-sm btn-outline-dark px-1 py-0">South</button> /
-          <button @click="move(0,grid)()" class="btn btn-sm btn-outline-dark px-1 py-0">East</button> /
-          <button @click="move(0,-grid)()" class="btn btn-sm btn-outline-dark px-1 py-0">West</button>
-        </span>
-        <span v-else>
-          not allowed after start!
-        </span>
+      <div v-else>
+        <div class="pb-3">
+          <button
+            @click="updateHere"
+            class="btn btn-outline-dark"
+            :disabled="isGoalReached"
+          >
+            Are we there yet?
+          </button>
+        </div>
+        <AttemptsTable
+          :attempts="attempts"
+          :startInSeconds="startInSeconds"
+          :freqInSeconds="freqInSeconds"
+        />
+        <div class="mb-3">
+          Move the goal:
+          <span v-if="attempts.length < 2">
+            <button @click="move(grid,0)()" class="btn btn-sm btn-outline-dark px-1 py-0">North</button> /
+            <button @click="move(-grid,0)()" class="btn btn-sm btn-outline-dark px-1 py-0">South</button> /
+            <button @click="move(0,grid)()" class="btn btn-sm btn-outline-dark px-1 py-0">East</button> /
+            <button @click="move(0,-grid)()" class="btn btn-sm btn-outline-dark px-1 py-0">West</button>
+          </span>
+          <span v-else>
+            not allowed after start!
+          </span>
+        </div>
       </div>
 
       <FoldDown label="👟 New...">

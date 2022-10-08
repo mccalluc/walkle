@@ -11,7 +11,7 @@ export default {
   },
   template: `
     <p v-if="!attempts.length">
-      Loading...
+      Loading GPS...
     </p>
     <table class="table table-bordered">
       <tbody>

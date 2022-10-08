@@ -2,7 +2,9 @@ function getGeolocationPromise() {
   return new Promise((resolve) => {
     navigator.geolocation.getCurrentPosition(
       resolve,
-      (error) => {console.error(error)},
+      (error) => {
+        throw error
+      },
       {
         maximumAge: 0,
         enableHighAccuracy: true,
