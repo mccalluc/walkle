@@ -203,32 +203,33 @@ export default {
             not allowed after start!
           </span>
         </div>
-      </div>
 
-      <FoldDown label="👟 New...">
-        <p>
-          Are you sure you want to clear and restart?
-          <NewWalkle />
-        </p>
-      </FoldDown>
-      <FoldDown label="🗺️ Hint...">
-        <p v-if="goalLatLong">
-          <AerialView
-            :lat="goalLatLong[0]"
-            :long="goalLatLong[1]"
+        <FoldDown label="👟 New...">
+          <p>
+            Are you sure you want to clear and restart?
+            <NewWalkle />
+          </p>
+        </FoldDown>
+        <FoldDown label="🗺️ Hint...">
+          <p v-if="goalLatLong">
+            <AerialView
+              :lat="goalLatLong[0]"
+              :long="goalLatLong[1]"
+            />
+          </p>
+        </FoldDown>
+        <FoldDown label="⚙️ Settings...">
+          <SettingsTable
+            v-model:unit="unit"
+            v-model:grid="grid"
+            v-model:radius="radius"
           />
-        </p>
-      </FoldDown>
-      <FoldDown label="⚙️ Settings...">
-        <SettingsTable
-          v-model:unit="unit"
-          v-model:grid="grid"
-          v-model:radius="radius"
-        />
-      </FoldDown>
-      <FoldDown label="ℹ️ Help...">
-        <HelpInfo />
-      </FoldDown>
+        </FoldDown>
+        <FoldDown label="ℹ️ Help...">
+          <HelpInfo />
+        </FoldDown>
+      
+      </div>
     </div>
   `
 }
