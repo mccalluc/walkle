@@ -4,8 +4,6 @@ function mock({latitude, longitude, geolocationError}) {
     onBeforeLoad(win) {
       cy.stub(win.navigator.geolocation, "getCurrentPosition", (cb, err) => {
         if (geolocationError) {
-          // https://developer.mozilla.org/en-US/docs/Web/API/GeolocationPositionError
-          // 1: rejected, 2: unable, 3: timeout
           throw err(geolocationError);
         } else {
           return cb({ coords: { latitude, longitude } });
