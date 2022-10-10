@@ -1,0 +1,4 @@
+globals:
+  # Maybe there's some way to get these automatically?
+  module: readonly
+rules: {}

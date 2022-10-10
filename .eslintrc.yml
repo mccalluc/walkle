@@ -9,4 +9,7 @@ parserOptions:
   sourceType: module
 plugins:
   - vue
+globals:
+  md5: readonly
+  geolib: readonly
 rules: {}

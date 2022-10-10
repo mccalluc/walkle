@@ -1,4 +1,3 @@
-import {getDistance, getCompassDirection, md5} from "../upstream.js";
 import {KM, MILE} from "../units.js";
 import getLatLong from "../getLatLong.js";
 
@@ -53,6 +52,9 @@ export default {
       attempts: JSON.parse(localStorage.attempts || '[]'),
       isGoalReached: false,
 
+      // ... or an error message:
+      errorMessage: null,
+
       // Time:
       startInSeconds,
       freqInSeconds,
@@ -70,7 +72,7 @@ export default {
     },
     distanceInMeters() {
       try {
-        return getDistance(ll(this.hereLatLong), ll(this.goalLatLong)) - this.radiusInMeters;
+        return geolib.getDistance(ll(this.hereLatLong), ll(this.goalLatLong)) - this.radiusInMeters;
       } catch {
         return undefined;
       }
@@ -80,7 +82,7 @@ export default {
     },
     compassDirection() {
       try {
-        return getCompassDirection(ll(this.hereLatLong), ll(this.goalLatLong));
+        return geolib.getCompassDirection(ll(this.hereLatLong), ll(this.goalLatLong));
       } catch {
         return undefined;
       }
@@ -129,6 +131,9 @@ export default {
       this.goalLatLong = pair;
       localStorage.setItem('goalLatLong', JSON.stringify(pair));
     },
+    setErrorMessage(errorMessage) {
+      this.errorMessage = errorMessage;
+    },
     move(dLat, dLong) {
       function callback() {
         const [lat, long] = this.goalLatLong;
@@ -145,8 +150,12 @@ export default {
   },
   async created() {
     if (! this.goalLatLong) {
-      this.setGoalLatLong(await getGoalLatLong({startInSeconds, freqInSeconds, grid: this.grid}));
-      this.updateHere(false);
+      try {
+        this.setGoalLatLong(await getGoalLatLong({startInSeconds, freqInSeconds, grid: this.grid}));
+        this.updateHere(false);
+      } catch (error) {
+        this.setErrorMessage(`Error code ${error.code}: ${error.message}`);
+      }
     } else {
       // Reloading an in-progress walk:
       // We don't need to update the table, but we do need to figure out where we are.
@@ -163,57 +172,63 @@ export default {
   },
   template: `
     <div>
-      <div class="pb-3">
-        <button
-          @click="updateHere"
-          class="btn btn-outline-dark"
-          :disabled="isGoalReached"
-        >
-          Are we there yet?
-        </button>
+      <div v-if="errorMessage">
+        {{ errorMessage }}
       </div>
-      <AttemptsTable
-        :attempts="attempts"
-        :startInSeconds="startInSeconds"
-        :freqInSeconds="freqInSeconds"
-      />
-      <div class="mb-3">
-        Move the goal:
-        <span v-if="attempts.length < 2">
-          <button @click="move(grid,0)()" class="btn btn-sm btn-outline-dark px-1 py-0">North</button> /
-          <button @click="move(-grid,0)()" class="btn btn-sm btn-outline-dark px-1 py-0">South</button> /
-          <button @click="move(0,grid)()" class="btn btn-sm btn-outline-dark px-1 py-0">East</button> /
-          <button @click="move(0,-grid)()" class="btn btn-sm btn-outline-dark px-1 py-0">West</button>
-        </span>
-        <span v-else>
-          not allowed after start!
-        </span>
-      </div>
-
-      <FoldDown label="👟 New...">
-        <p>
-          Are you sure you want to clear and restart?
-          <NewWalkle />
-        </p>
-      </FoldDown>
-      <FoldDown label="🗺️ Hint...">
-        <p v-if="goalLatLong">
-          <AerialView
-            :lat="goalLatLong[0]"
-            :long="goalLatLong[1]"
-          />
-        </p>
-      </FoldDown>
-      <FoldDown label="⚙️ Settings...">
-        <SettingsTable
-          v-model:unit="unit"
-          v-model:grid="grid"
-          v-model:radius="radius"
+      <div v-else>
+        <div class="pb-3">
+          <button
+            @click="updateHere"
+            class="btn btn-outline-dark"
+            :disabled="isGoalReached"
+          >
+            Are we there yet?
+          </button>
+        </div>
+        <AttemptsTable
+          :attempts="attempts"
+          :startInSeconds="startInSeconds"
+          :freqInSeconds="freqInSeconds"
         />
-      </FoldDown>
-      <FoldDown label="ℹ️ Help...">
-        <HelpInfo />
-      </FoldDown>
+        <div class="mb-3">
+          Move the goal:
+          <span v-if="attempts.length < 2">
+            <button @click="move(grid,0)()" class="btn btn-sm btn-outline-dark px-1 py-0">North</button> /
+            <button @click="move(-grid,0)()" class="btn btn-sm btn-outline-dark px-1 py-0">South</button> /
+            <button @click="move(0,grid)()" class="btn btn-sm btn-outline-dark px-1 py-0">East</button> /
+            <button @click="move(0,-grid)()" class="btn btn-sm btn-outline-dark px-1 py-0">West</button>
+          </span>
+          <span v-else>
+            not allowed after start!
+          </span>
+        </div>
+
+        <FoldDown label="👟 New...">
+          <p>
+            Are you sure you want to clear and restart?
+            <NewWalkle />
+          </p>
+        </FoldDown>
+        <FoldDown label="🗺️ Hint...">
+          <p v-if="goalLatLong">
+            <AerialView
+              :lat="goalLatLong[0]"
+              :long="goalLatLong[1]"
+            />
+          </p>
+        </FoldDown>
+        <FoldDown label="⚙️ Settings...">
+          <SettingsTable
+            v-model:unit="unit"
+            v-model:grid="grid"
+            v-model:radius="radius"
+          />
+        </FoldDown>
+        <FoldDown label="ℹ️ Help...">
+          <HelpInfo />
+        </FoldDown>
+      
+      </div>
     </div>
   `
 }

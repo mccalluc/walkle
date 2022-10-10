@@ -1,0 +1,9 @@
+globals:
+  # Maybe there's some way to get these automatically?
+  cy: readonly
+  describe: readonly
+  beforeEach: readonly
+  it: readonly
+plugins:
+  - cypress
+rules: {}
