@@ -10,12 +10,21 @@ layout: base
   </div>
 </div>
 
-
 {% if jekyll.environment == "production" %}
 <script src="https://unpkg.com/vue@3.2.31/dist/vue.global.prod.js"></script>
 {% else %}
 <script src="https://unpkg.com/vue@3.2.31/dist/vue.global.js"></script>
 {% endif %}
+
+<!-- 
+  I initially used the Skypack CDN for ESMs, but rather than serving a single file for geolib,
+  it requires 40 separate small downloads. On large libraries, with large source files,
+  this makes sense, but for a small utility library, the number of downloads, and the browser's
+  simultaneous download limit negate anything we gain by only downloading the code we need.
+-->
+<script src="https://unpkg.com/geolib@3.3.3/lib/index.js"></script>
+<script src="https://unpkg.com/js-md5@0.7.3/build/md5.min.js"></script>
+
 
 <script type="module">
   import App from '{{ site.baseurl }}/assets/js/components/WalkleApp.js';

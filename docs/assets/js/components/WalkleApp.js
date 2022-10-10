@@ -1,4 +1,3 @@
-import {getDistance, getCompassDirection, md5} from "../upstream.js";
 import {KM, MILE} from "../units.js";
 import getLatLong from "../getLatLong.js";
 
@@ -73,7 +72,7 @@ export default {
     },
     distanceInMeters() {
       try {
-        return getDistance(ll(this.hereLatLong), ll(this.goalLatLong)) - this.radiusInMeters;
+        return geolib.getDistance(ll(this.hereLatLong), ll(this.goalLatLong)) - this.radiusInMeters;
       } catch {
         return undefined;
       }
@@ -83,7 +82,7 @@ export default {
     },
     compassDirection() {
       try {
-        return getCompassDirection(ll(this.hereLatLong), ll(this.goalLatLong));
+        return geolib.getCompassDirection(ll(this.hereLatLong), ll(this.goalLatLong));
       } catch {
         return undefined;
       }
