@@ -24,6 +24,8 @@ describe('happy walkle', () => {
 
   it('works', () => {
     cy.contains('Walkle')
+    cy.contains('location is not sent to the server or stored')
+    cy.contains('OK').click()
     cy.contains('Walk 0.67 km ENE')
     cy.contains('Are we there yet?').click()
     cy.contains('Still 0.67 km ENE')
@@ -39,6 +41,7 @@ describe('geolocation error', () => {
 
   it('handles rejection', () => {
     cy.contains('Walkle')
+    cy.contains('OK').click()
     cy.contains('Error code 42: Boo!')
   })
 })
