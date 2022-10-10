@@ -1,12 +1,15 @@
-function mock(latitude, longitude) {
+function mock({latitude, longitude, geolocationError}) {
   // https://github.com/cypress-io/cypress/issues/2671#issuecomment-444069577
   return {
     onBeforeLoad(win) {
       cy.stub(win.navigator.geolocation, "getCurrentPosition", (cb, err) => {
-        if (latitude && longitude) {
+        if (geolocationError) {
+          // https://developer.mozilla.org/en-US/docs/Web/API/GeolocationPositionError
+          // 1: rejected, 2: unable, 3: timeout
+          throw err(geolocationError);
+        } else {
           return cb({ coords: { latitude, longitude } });
         }
-        throw err({ code: 1 }); // 1: rejected, 2: unable, 3: timeout
       });
 
       cy.stub(win.Date, "now", () => {
@@ -16,9 +19,9 @@ function mock(latitude, longitude) {
   };
 }
 
-describe('walkle', () => {
+describe('happy walkle', () => {
   beforeEach(() => {
-    cy.visit('http://127.0.0.1:4000/walkle/', mock(42.36, -71.06))
+    cy.visit('http://127.0.0.1:4000/walkle/', mock({latitude: 42.36, longitude: -71.06}))
   })
 
   it('works', () => {
@@ -28,5 +31,16 @@ describe('walkle', () => {
     cy.contains('Still 0.67 km ENE')
     cy.contains('Move the goal: not allowed after start!')
     cy.contains('Settings').click()
+  })
+})
+
+describe('geolocation error', () => {
+  beforeEach(() => {
+    cy.visit('http://127.0.0.1:4000/walkle/', mock({geolocationError: {code: 42, message: 'Boo!'}}))
+  })
+
+  it('handles rejection', () => {
+    cy.contains('Walkle')
+    cy.contains('Error code 42: Boo!')
   })
 })

@@ -54,7 +54,7 @@ export default {
       isGoalReached: false,
 
       // ... or an error message:
-      message: null,
+      errorMessage: null,
 
       // Time:
       startInSeconds,
@@ -132,8 +132,8 @@ export default {
       this.goalLatLong = pair;
       localStorage.setItem('goalLatLong', JSON.stringify(pair));
     },
-    setMessage(message) {
-      this.message = message;
+    setErrorMessage(errorMessage) {
+      this.errorMessage = errorMessage;
     },
     move(dLat, dLong) {
       function callback() {
@@ -155,8 +155,7 @@ export default {
         this.setGoalLatLong(await getGoalLatLong({startInSeconds, freqInSeconds, grid: this.grid}));
         this.updateHere(false);
       } catch (error) {
-        // TODO: Handle different cases.
-        this.setMessage('Error!');
+        this.setErrorMessage(`Error code ${error.code}: ${error.message}`);
       }
     } else {
       // Reloading an in-progress walk:
@@ -174,8 +173,8 @@ export default {
   },
   template: `
     <div>
-      <div v-if="message">
-        TODO: Message here
+      <div v-if="errorMessage">
+        {{ errorMessage }}
       </div>
       <div v-else>
         <div class="pb-3">
