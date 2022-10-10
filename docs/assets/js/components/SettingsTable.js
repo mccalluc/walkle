@@ -45,7 +45,7 @@ export default {
         <tr>
           <td>unit</td>
           <td>
-            <select v-model="computedUnit">
+            <select v-model="computedUnit" id="unit">
               <option :value="MILE">{{MILE}}</option>
               <option :value="KM">{{KM}}</option>
             </select>
