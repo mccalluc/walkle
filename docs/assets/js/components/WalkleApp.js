@@ -135,12 +135,9 @@ export default {
       this.errorMessage = errorMessage;
     },
     move(dLat, dLong) {
-      function callback() {
-        const [lat, long] = this.goalLatLong;
-        this.setGoalLatLong([lat + dLat, long + dLong]);
-        this.updateHere(false);
-      }
-      return callback.bind(this);
+      const [lat, long] = this.goalLatLong;
+      this.setGoalLatLong([lat + dLat, long + dLong]);
+      this.updateHere(false);
     },
     restart() {
       localStorage.removeItem('attempts');
@@ -190,17 +187,12 @@ export default {
           :startInSeconds="startInSeconds"
           :freqInSeconds="freqInSeconds"
         />
-        <div class="mb-3">
-          Move the goal:
-          <span v-if="attempts.length < 2">
-            <button @click="move(grid,0)()" class="btn btn-sm btn-outline-dark px-1 py-0">North</button> /
-            <button @click="move(-grid,0)()" class="btn btn-sm btn-outline-dark px-1 py-0">South</button> /
-            <button @click="move(0,grid)()" class="btn btn-sm btn-outline-dark px-1 py-0">East</button> /
-            <button @click="move(0,-grid)()" class="btn btn-sm btn-outline-dark px-1 py-0">West</button>
-          </span>
-          <span v-else>
-            not allowed after start!
-          </span>
+        <div class="mb-3" v-if="attempts.length < 2">
+          or move goal:
+          <button @click="move(grid,0)" class="btn btn-sm btn-outline-dark px-1 py-0">North</button> /
+          <button @click="move(-grid,0)" class="btn btn-sm btn-outline-dark px-1 py-0">South</button> /
+          <button @click="move(0,grid)" class="btn btn-sm btn-outline-dark px-1 py-0">East</button> /
+          <button @click="move(0,-grid)" class="btn btn-sm btn-outline-dark px-1 py-0">West</button>
         </div>
 
         <FoldDown label="👟 New...">
