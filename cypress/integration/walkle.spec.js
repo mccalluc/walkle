@@ -42,6 +42,10 @@ describe('happy walkle', () => {
 
     cy.contains('Are we there yet?').click()
     cy.contains('Still 1.4 mile NNE')
+
+    cy.contains('New...').click()
+    cy.contains('New Walkle!').click()
+    cy.contains('Still 1.4 mile NNE').should('not.exist')
   })
 })
 
