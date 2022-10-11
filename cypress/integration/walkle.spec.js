@@ -39,6 +39,9 @@ describe('happy walkle', () => {
     cy.contains('Are we there yet?').click()
     cy.contains('or move goal').should('not.exist')
     cy.contains('Now go 1.4 mile NNE') // ... but this is in miles
+
+    cy.contains('Are we there yet?').click()
+    cy.contains('Still 1.4 mile NNE')
   })
 })
 
